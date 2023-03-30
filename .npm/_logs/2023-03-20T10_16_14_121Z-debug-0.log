@@ -1,0 +1,77 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@9.6.2
+2 info using node@v19.8.1
+3 timing npm:load:whichnode Completed in 1ms
+4 timing config:load:defaults Completed in 1ms
+5 timing config:load:file:/usr/local/lib/node_modules/npm/npmrc Completed in 1ms
+6 timing config:load:builtin Completed in 1ms
+7 timing config:load:cli Completed in 2ms
+8 timing config:load:env Completed in 0ms
+9 timing config:load:project Completed in 3ms
+10 timing config:load:file:/Users/quanianitis/.npmrc Completed in 0ms
+11 timing config:load:user Completed in 0ms
+12 timing config:load:file:/usr/local/etc/npmrc Completed in 0ms
+13 timing config:load:global Completed in 0ms
+14 timing config:load:setEnvs Completed in 1ms
+15 timing config:load Completed in 8ms
+16 timing npm:load:configload Completed in 8ms
+17 timing npm:load:mkdirpcache Completed in 0ms
+18 timing npm:load:mkdirplogs Completed in 0ms
+19 verbose title npm install typescript typescript-language-server
+20 verbose argv "install" "--global" "typescript" "typescript-language-server"
+21 timing npm:load:setTitle Completed in 7ms
+22 timing config:load:flatten Completed in 2ms
+23 timing npm:load:display Completed in 2ms
+24 verbose logfile logs-max:10 dir:/Users/quanianitis/.npm/_logs/2023-03-20T10_16_14_121Z-
+25 verbose logfile /Users/quanianitis/.npm/_logs/2023-03-20T10_16_14_121Z-debug-0.log
+26 timing npm:load:logFile Completed in 3ms
+27 timing npm:load:timers Completed in 0ms
+28 timing npm:load:configScope Completed in 0ms
+29 timing npm:load Completed in 21ms
+30 timing config:load:flatten Completed in 0ms
+31 timing arborist:ctor Completed in 0ms
+32 silly logfile done cleaning log files
+33 timing idealTree:init Completed in 4ms
+34 timing idealTree:userRequests Completed in 3ms
+35 silly idealTree buildDeps
+36 silly fetch manifest typescript@*
+37 http fetch GET 200 https://registry.npmjs.org/typescript 8200ms (cache miss)
+38 silly fetch manifest typescript-language-server@*
+39 http fetch GET 200 https://registry.npmjs.org/typescript-language-server 1066ms (cache miss)
+40 silly placeDep ROOT typescript@5.0.2 OK for:  want: *
+41 silly placeDep ROOT typescript-language-server@3.3.0 OK for:  want: *
+42 timing idealTree:#root Completed in 9311ms
+43 timing idealTree:node_modules/typescript Completed in 0ms
+44 timing idealTree:node_modules/typescript-language-server Completed in 0ms
+45 timing idealTree:buildDeps Completed in 9312ms
+46 timing idealTree:fixDepFlags Completed in 0ms
+47 timing idealTree Completed in 9321ms
+48 timing reify:loadTrees Completed in 9323ms
+49 timing reify:diffTrees Completed in 2ms
+50 silly reify moves {}
+51 timing reify:retireShallow Completed in 1ms
+52 timing reify:createSparse Completed in 1ms
+53 timing reify:loadBundles Completed in 0ms
+54 silly tarball no local data for typescript-language-server@https://registry.npmjs.org/typescript-language-server/-/typescript-language-server-3.3.0.tgz. Extracting by manifest.
+55 silly tarball no local data for typescript@https://registry.npmjs.org/typescript/-/typescript-5.0.2.tgz. Extracting by manifest.
+56 http fetch GET 200 https://registry.npmjs.org/typescript-language-server/-/typescript-language-server-3.3.0.tgz 231ms (cache miss)
+57 timing reifyNode:node_modules/typescript-language-server Completed in 241ms
+58 http fetch GET 200 https://registry.npmjs.org/typescript/-/typescript-5.0.2.tgz 3115ms (cache miss)
+59 timing reifyNode:node_modules/typescript Completed in 3123ms
+60 timing reify:unpack Completed in 3124ms
+61 timing reify:unretire Completed in 0ms
+62 timing build:queue Completed in 1ms
+63 timing build:link:node_modules/typescript Completed in 2ms
+64 timing build:link:node_modules/typescript-language-server Completed in 1ms
+65 timing build:link Completed in 2ms
+66 timing build:deps Completed in 4ms
+67 timing build Completed in 4ms
+68 timing reify:build Completed in 4ms
+69 timing reify:trash Completed in 0ms
+70 timing reify Completed in 12460ms
+71 silly ADD node_modules/typescript-language-server
+72 silly ADD node_modules/typescript
+73 timing command:install Completed in 12465ms
+74 verbose exit 0
+75 timing npm Completed in 12493ms
+76 info ok
