@@ -1,0 +1,219 @@
+2023-03-27 23:48:20,574 DEBUG    root            Loaded Command Group: ['gcloud', 'cheat_sheet']
+2023-03-27 23:48:20,575 DEBUG    root            Running [gcloud.cheat-sheet] with arguments: []
+2023-03-27 23:48:20,575 DEBUG    root            Running [gcloud.cheat-sheet] with arguments: [--document: "None"]
+2023-03-27 23:48:20,587 DEBUG    root            Loaded Command Group: ['gcloud', 'help']
+2023-03-27 23:48:20,590 DEBUG    root            Loaded Command Group: ['gcloud', 'init']
+2023-03-27 23:48:20,591 DEBUG    root            Loaded Command Group: ['gcloud', 'version']
+2023-03-27 23:48:20,591 DEBUG    root            Loaded Command Group: ['gcloud', 'components']
+2023-03-27 23:48:20,593 DEBUG    root            Loaded Command Group: ['gcloud', 'components', 'install']
+2023-03-27 23:48:20,594 DEBUG    root            Loaded Command Group: ['gcloud', 'components', 'update']
+2023-03-27 23:48:20,595 DEBUG    root            Loaded Command Group: ['gcloud', 'config']
+2023-03-27 23:48:20,613 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'set']
+2023-03-27 23:48:20,618 DEBUG    root            Loaded Command Group: ['gcloud', 'info']
+2023-03-27 23:48:20,621 DEBUG    root            Loaded Command Group: ['gcloud', 'feedback']
+2023-03-27 23:48:20,622 DEBUG    root            Loaded Command Group: ['gcloud', 'topic']
+2023-03-27 23:48:20,624 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'get']
+2023-03-27 23:48:20,625 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'list']
+2023-03-27 23:48:20,626 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations']
+2023-03-27 23:48:20,627 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations', 'create']
+2023-03-27 23:48:20,628 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations', 'list']
+2023-03-27 23:48:20,629 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'configurations', 'activate']
+2023-03-27 23:48:20,629 DEBUG    root            Loaded Command Group: ['gcloud', 'auth']
+2023-03-27 23:48:20,631 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'login']
+2023-03-27 23:48:20,633 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'activate_service_account']
+2023-03-27 23:48:20,634 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'list']
+2023-03-27 23:48:20,635 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'print_access_token']
+2023-03-27 23:48:20,636 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'revoke']
+2023-03-27 23:48:20,637 DEBUG    root            Loaded Command Group: ['gcloud', 'projects']
+2023-03-27 23:48:20,639 DEBUG    root            Loaded Command Group: ['gcloud', 'projects', 'describe']
+2023-03-27 23:48:20,648 DEBUG    root            Loaded Command Group: ['gcloud', 'projects', 'add_iam_policy_binding']
+2023-03-27 23:48:20,649 DEBUG    root            Loaded Command Group: ['gcloud', 'iam']
+2023-03-27 23:48:20,654 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'list_grantable_roles']
+2023-03-27 23:48:20,655 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'roles']
+2023-03-27 23:48:20,656 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'roles', 'create']
+2023-03-27 23:48:20,657 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service_accounts']
+2023-03-27 23:48:20,658 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service-accounts', 'create']
+2023-03-27 23:48:20,690 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service-accounts', 'add_iam_policy_binding']
+2023-03-27 23:48:20,692 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service-accounts', 'set_iam_policy']
+2023-03-27 23:48:20,693 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service-accounts', 'keys']
+2023-03-27 23:48:20,694 DEBUG    root            Loaded Command Group: ['gcloud', 'iam', 'service-accounts', 'keys', 'list']
+2023-03-27 23:48:20,697 DEBUG    root            Loaded Command Group: ['gcloud', 'auth', 'configure_docker']
+2023-03-27 23:48:20,711 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'clusters']
+2023-03-27 23:48:20,716 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'clusters', 'create']
+2023-03-27 23:48:20,739 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'clusters', 'list']
+2023-03-27 23:48:20,740 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'clusters', 'get_credentials']
+2023-03-27 23:48:20,741 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'images']
+2023-03-27 23:48:20,786 DEBUG    root            Loaded Command Group: ['gcloud', 'container', 'images', 'list_tags']
+2023-03-27 23:48:20,787 DEBUG    root            Loaded Command Group: ['gcloud', 'compute']
+2023-03-27 23:48:20,789 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'zones']
+2023-03-27 23:48:20,790 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'zones', 'list']
+2023-03-27 23:48:20,791 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances']
+2023-03-27 23:48:20,793 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances', 'describe']
+2023-03-27 23:48:20,794 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'instances', 'list']
+2023-03-27 23:48:20,795 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'disks']
+2023-03-27 23:48:20,800 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'disks', 'snapshot']
+2023-03-27 23:48:20,801 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'snapshots']
+2023-03-27 23:48:20,802 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'snapshots', 'describe']
+2023-03-27 23:48:20,803 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'snapshots', 'delete']
+2023-03-27 23:48:20,887 DEBUG    root            Loaded Command Group: ['gcloud', 'compute', 'ssh']
+2023-03-27 23:48:20,888 DEBUG    root            Loaded Command Group: ['gcloud', 'app']
+2023-03-27 23:48:21,205 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'deploy']
+2023-03-27 23:48:21,206 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'versions']
+2023-03-27 23:48:21,207 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'versions', 'list']
+2023-03-27 23:48:21,208 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'browse']
+2023-03-27 23:48:21,209 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'create']
+2023-03-27 23:48:21,210 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'logs']
+2023-03-27 23:48:21,211 DEBUG    root            Loaded Command Group: ['gcloud', 'app', 'logs', 'read']
+2023-03-27 23:48:21,212 DEBUG    root            Loaded Command Group: ['gcloud', 'kms']
+2023-03-27 23:48:21,223 DEBUG    root            Loaded Command Group: ['gcloud', 'kms', 'decrypt']
+2023-03-27 23:48:21,224 DEBUG    root            Loaded Command Group: ['gcloud', 'logging']
+2023-03-27 23:48:21,225 DEBUG    root            Loaded Command Group: ['gcloud', 'logging', 'logs']
+2023-03-27 23:48:21,226 DEBUG    root            Loaded Command Group: ['gcloud', 'logging', 'logs', 'list']
+2023-03-27 23:48:21,227 DEBUG    root            Loaded Command Group: ['gcloud', 'sql']
+2023-03-27 23:48:21,228 DEBUG    root            Loaded Command Group: ['gcloud', 'sql', 'backups']
+2023-03-27 23:48:21,250 DEBUG    root            Loaded Command Group: ['gcloud', 'sql', 'backups', 'describe']
+2023-03-27 23:48:21,251 DEBUG    root            Loaded Command Group: ['gcloud', 'sql', 'export']
+2023-03-27 23:48:21,254 DEBUG    root            Loaded Command Group: ['gcloud', 'sql', 'export', 'sql']
+2023-03-27 23:48:21,258 INFO     ___FILE_ONLY___ [m[1mNAME[m
+    gcloud cheat-sheet - display gcloud cheat sheet
+
+[m[1mSYNOPSIS[m
+    [1mgcloud cheat-sheet[m [[4mGCLOUD_WIDE_FLAG ...[m]
+
+[m[1mDESCRIPTION[m
+    A roster of go-to [1mgcloud[m commands for the gcloud tool, Google Cloud's
+    primary command-line tool.
+
+[m  [1mGetting started[m
+    Get going with the [1mgcloud[m command-line tool
+
+      ▪ [1mgcloud init[m: Initialize, authorize, and configure the [1mgcloud[m tool.
+      ▪ [1mgcloud version[m: Display version and installed components.
+      ▪ [1mgcloud components install[m: Install specific components.
+      ▪ [1mgcloud components update[m: Update your Google Cloud CLI to the latest
+        version.
+      ▪ [1mgcloud config set[m [1mproject[m: Set a default Google Cloud project to work
+        on.
+      ▪ [1mgcloud info[m: Display current [1mgcloud[m tool environment details.
+
+[m  [1mHelp[m
+    Google Cloud CLI is happy to help
+
+      ▪ [1mgcloud help[m: Search the [1mgcloud[m tool reference documents for specific
+        terms.
+      ▪ [1mgcloud feedback[m: Provide feedback for the Google Cloud CLI team.
+      ▪ [1mgcloud topic[m: Supplementary help material for non-command topics like
+        accessibility, filtering, and formatting.
+
+[m  [1mPersonalization[m
+    Make the Google Cloud CLI your own; personalize your configuration with
+    properties
+
+      ▪ [1mgcloud config set[m: Define a property (like compute/zone) for the
+        current configuration.
+      ▪ [1mgcloud config get[m: Fetch value of a Google Cloud CLI property.
+      ▪ [1mgcloud config list[m: Display all the properties for the current
+        configuration.
+      ▪ [1mgcloud config configurations create[m: Create a new named
+        configuration.
+      ▪ [1mgcloud config configurations list[m: Display a list of all available
+        configurations.
+      ▪ [1mgcloud config configurations activate[m: Switch to an existing named
+        configuration.
+
+[m  [1mCredentials[m
+    Grant and revoke authorization to Google Cloud CLI
+
+      ▪ [1mgcloud auth login[m: Authorize Google Cloud access for the [1mgcloud[m tool
+        with Google user credentials and set current account as active.
+      ▪ [1mgcloud auth activate-service-account[m: Like [1mgcloud auth login[m but with
+        service account credentials.
+      ▪ [1mgcloud auth list[m: List all credentialed accounts.
+      ▪ [1mgcloud auth print-access-token[m: Display the current account's access
+        token.
+      ▪ [1mgcloud auth revoke[m: Remove access credentials for an account.
+
+[m  [1mProjects[m
+    Manage project access policies
+
+      ▪ [1mgcloud projects describe[m: Display metadata for a project (including
+        its ID).
+      ▪ [1mgcloud projects add-iam-policy-binding[m: Add an IAM policy binding to
+        a specified project.
+
+[m  [1mIdentity & Access Management[m
+    Configuring Cloud Identity & Access Management (IAM) preferences and
+    service accounts
+
+      ▪ [1mgcloud iam list-grantable-roles[m: List IAM grantable roles for a
+        resource.
+      ▪ [1mgcloud iam roles create[m: Create a custom role for a project or org.
+      ▪ [1mgcloud iam service-accounts create[m: Create a service account for a
+        project.
+      ▪ [1mgcloud iam service-accounts add-iam-policy-binding[m: Add an IAM policy
+        binding to a service account.
+      ▪ [1mgcloud iam service-accounts set-iam-policy[m: Replace existing IAM
+        policy binding.
+      ▪ [1mgcloud iam service-accounts keys list[m: List a service account's keys.
+
+[m  [1mDocker & Google Kubernetes Engine (GKE)[m
+    Manage containerized applications on Kubernetes
+
+      ▪ [1mgcloud auth configure-docker[m: Register the [1mgcloud[m tool as a Docker
+        credential helper.
+      ▪ [1mgcloud container clusters create[m: Create a cluster to run GKE
+        containers.
+      ▪ [1mgcloud container clusters list[m: List clusters for running GKE
+        containers.
+      ▪ [1mgcloud container clusters get-credentials[m: Update [1mkubeconfig[m to get
+        [1mkubectl[m to use a GKE cluster.
+      ▪ [1mgcloud container images list-tags[m: List tag and digest metadata for a
+        container image.
+
+[m  [1mVirtual Machines & Compute Engine[m
+    Create, run, and manage VMs on Google infrastructure
+
+      ▪ [1mgcloud compute zones list[m: List Compute Engine zones.
+      ▪ [1mgcloud compute instances describe[m: Display a VM instance's details.
+      ▪ [1mgcloud compute instances list[m: List all VM instances in a project.
+      ▪ [1mgcloud compute disks snapshot[m: Create snapshot of persistent disks.
+      ▪ [1mgcloud compute snapshots describe[m: Display a snapshot's details.
+      ▪ [1mgcloud compute snapshots delete[m: Delete a snapshot.
+      ▪ [1mgcloud compute ssh[m: Connect to a VM instance by using SSH.
+
+[m  [1mServerless & App Engine[m
+    Build highly scalable applications on a fully managed serverless platform
+
+      ▪ [1mgcloud app deploy[m: Deploy your app's code and configuration to the
+        App Engine server.
+      ▪ [1mgcloud app versions list[m: List all versions of all services deployed
+        to the App Engine server.
+      ▪ [1mgcloud app browse[m: Open the current app in a web browser.
+      ▪ [1mgcloud app create[m: Create an App Engine app within your current
+        project.
+      ▪ [1mgcloud app logs read[m: Display the latest App Engine app logs.
+
+[m  [1mMiscellaneous[m
+    Commands that might come in handy
+
+      ▪ [1mgcloud kms decrypt[m: Decrypt ciphertext (to a plaintext file) using a
+        Cloud Key Management Service (Cloud KMS) key.
+      ▪ [1mgcloud logging logs list[m: List your project's logs.
+      ▪ [1mgcloud sql backups describe[m: Display info about a Cloud SQL instance
+        backup.
+      ▪ [1mgcloud sql export sql[m: Export data from a Cloud SQL instance to a SQL
+        file.
+
+[m[1mEXAMPLES[m
+    To view this cheat sheet, run:
+
+        $ gcloud cheat-sheet
+
+[m[1mGCLOUD WIDE FLAGS[m
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run [1m$ gcloud help[m for details.
+[m
