@@ -3,6 +3,17 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+eval $(/opt/homebrew/bin/brew shellenv)
+export PATH=$PATH:/Users/quanianitis/.cargo/bin
+# export PATH="$PATH:$(du "$HOME/.local/bin" | cut -f2 | paste -sd ':'
+export PATH=$PATH:/Users/quanianitis/Library/Python/3.9/bin
+export PATH=$PATH:/Users/quanianitis/go/bin
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# export SDKMAN_DIR="$HOME/.sdkman"
+# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# export PATH=$PATH:/Users/quanianitis/.spicetify
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -73,9 +84,6 @@ ZSH_THEME="jonathan" # set by `omz`
 plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
-source ~/.oh-my-zsh/catppuccin_latte-zsh-syntax-highlighting.zsh
-
-source /Users/quanianitis/.config/op/plugins.sh
 
 # User configuration
 
@@ -85,11 +93,11 @@ source /Users/quanianitis/.config/op/plugins.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='hx'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -100,28 +108,10 @@ source /Users/quanianitis/.config/op/plugins.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias cat="bat"
-alias du="dust"
-alias ls="exa"
-alias gui="gitui"
-alias pomo="porsmo"
-alias cd ="zoxide"
-alias cl="clear"
-
-export PATH=$PATH:/Users/quanianitis/Library/Python/3.9/bin
-export PATH=$PATH:/Users/quanianitis/go/bin
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-# export PATH=$PATH:/Users/quanianitis/.spicetify
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/quanianitis/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/quanianitis/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc'; fi
+alias zshconfig="mate ~/.zshrc"
+alias ohmyzsh="mate ~/.oh-my-zsh"
+alias python3="python"
 alias config='/usr/bin/git --git-dir=/Users/quanianitis/.cfg/ --work-tree=/Users/quanianitis'
+alias ls="exa"
+
+eval "$(zoxide init zsh)"
