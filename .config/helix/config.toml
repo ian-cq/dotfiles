@@ -1,5 +1,8 @@
 theme = "flatwhite"
 
+[editor.soft-wrap]
+enable = true
+
 [keys.normal]
 p = ["paste_clipboard_after", "collapse_selection"]
 P = ["paste_clipboard_before", "collapse_selection"]
