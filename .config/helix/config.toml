@@ -3,6 +3,20 @@ theme = "flatwhite"
 [editor.soft-wrap]
 enable = true
 
+[editor]
+cursorline = true
+color-modes = true
+auto-save = true
+bufferline = "multiple"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.lsp]
+display-inlay-hints = true
+
 [keys.normal]
 p = ["paste_clipboard_after", "collapse_selection"]
 P = ["paste_clipboard_before", "collapse_selection"]
@@ -25,6 +39,8 @@ S = "surround_add" # Would be nice to be able to do something after this but it 
 i = ["insert_mode", "collapse_selection"]
 a = ["append_mode", "collapse_selection"]
 
+C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
 
 # Undoing the 'd' + motion commands restores the selection which is annoying
 u = ["undo", "collapse_selection"]
