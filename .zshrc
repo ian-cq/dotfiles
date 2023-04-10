@@ -1,13 +1,19 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# * ~/.extra can be used for other settings you don’t want to commit.
+for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
+	[ -r "$file" ] && [ -f "$file" ] && source "$file";
+done;#
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 eval $(/opt/homebrew/bin/brew shellenv)
 export PATH=$PATH:/Users/quanianitis/.cargo/bin
 # export PATH="$PATH:$(du "$HOME/.local/bin" | cut -f2 | paste -sd ':'
 export PATH=$PATH:/Users/quanianitis/Library/Python/3.9/bin
-export PATH=$PATH:/Users/quanianitis/go/bin
+export PATH="$PATH:$(go env GOPATH)/bin"
+export PATH=$PATH:/opt/X11/bin
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # export SDKMAN_DIR="$HOME/.sdkman"
@@ -115,3 +121,9 @@ alias config='/usr/bin/git --git-dir=/Users/quanianitis/.cfg/ --work-tree=/Users
 alias ls="exa"
 
 eval "$(zoxide init zsh)"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/quanianitis/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/quanianitis/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc'; fi
