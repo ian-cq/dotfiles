@@ -2,3 +2,6 @@
 account = quanianitis@gmail.com
 project = blackpink-sandbox
 
+[compute]
+zone = asia-southeast1-a
+

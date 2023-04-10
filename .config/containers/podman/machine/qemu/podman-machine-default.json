@@ -43,7 +43,7 @@
   "-virtfs",
   "local,path=/var/folders,mount_tag=vol2,security_model=none",
   "-drive",
-  "if=virtio,file=/Users/quanianitis/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-37.20230322.2.0-qemu.aarch64.qcow2"
+  "if=virtio,file=/Users/quanianitis/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-37.20230401.2.0-qemu.aarch64.qcow2"
  ],
  "Rootful": false,
  "UID": 501,
@@ -52,7 +52,7 @@
  },
  "ImageStream": "testing",
  "ImagePath": {
-  "Path": "/Users/quanianitis/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-37.20230322.2.0-qemu.aarch64.qcow2"
+  "Path": "/Users/quanianitis/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-37.20230401.2.0-qemu.aarch64.qcow2"
  },
  "Mounts": [
   {
@@ -98,9 +98,9 @@
  "DiskSize": 100,
  "Memory": 2048,
  "IdentityPath": "/Users/quanianitis/.ssh/podman-machine-default",
- "Port": 58963,
+ "Port": 63417,
  "RemoteUsername": "core",
  "Starting": false,
- "Created": "2023-03-26T16:20:39.308065+08:00",
- "LastUp": "2023-03-28T10:52:26.473118+08:00"
+ "Created": "2023-04-05T12:58:07.328343+08:00",
+ "LastUp": "2023-04-05T12:58:07.328343+08:00"
 }

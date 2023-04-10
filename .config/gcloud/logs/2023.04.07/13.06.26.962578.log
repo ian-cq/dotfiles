@@ -1,0 +1,8 @@
+2023-04-07 13:06:26,963 DEBUG    root            Loaded Command Group: ['gcloud', 'config']
+2023-04-07 13:06:26,990 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'set']
+2023-04-07 13:06:26,991 DEBUG    root            Running [gcloud.config.set] with arguments: [SECTION/PROPERTY: "compute/zone", VALUE: "asia-southeast-a1"]
+2023-04-07 13:06:27,130 DEBUG    urllib3.connectionpool Starting new HTTPS connection (1): compute.googleapis.com:443
+2023-04-07 13:06:27,640 DEBUG    urllib3.connectionpool https://compute.googleapis.com:443 "POST /batch/compute/v1 HTTP/1.1" 200 None
+2023-04-07 13:06:27,652 WARNING  root            asia-southeast-a1 is not a valid zone. Run `gcloud compute zones list` to get all zones.
+2023-04-07 13:06:31,689 DEBUG    root            Chosen display Format:default
+2023-04-07 13:06:31,692 INFO     root            Display format: "default"

@@ -1,0 +1,182 @@
+2023-04-07 11:58:25,896 DEBUG    root            Loaded Command Group: ['gcloud', 'components']
+2023-04-07 11:58:25,899 DEBUG    root            Loaded Command Group: ['gcloud', 'components', 'install']
+2023-04-07 11:58:25,900 DEBUG    root            Running [gcloud.components.install] with arguments: [COMPONENT-IDS:1: "['docker-credential-gcr']"]
+2023-04-07 11:58:25,932 DEBUG    urllib3.connectionpool Starting new HTTPS connection (1): dl.google.com:443
+2023-04-07 11:58:26,021 DEBUG    urllib3.connectionpool https://dl.google.com:443 "GET /dl/cloudsdk/channels/rapid/components-v425.0.0.json HTTP/1.1" 200 206156
+2023-04-07 11:58:26,103 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,104 INFO     ___FILE_ONLY___ 
+Your current Google Cloud CLI version is: 425.0.0
+
+2023-04-07 11:58:26,104 INFO     ___FILE_ONLY___ Installing components from version: 425.0.0
+
+2023-04-07 11:58:26,104 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,104 DEBUG    root            Chosen display Format:table[box,title="These components will be removed."](details.display_name:label=Name:align=left,version.version_string:label=Version:align=right,data.size.size(zero="",min=1048576):label=Size:align=right)
+2023-04-07 11:58:26,104 DEBUG    root            Chosen display Format:table[box,title="These components will be updated."](details.display_name:label=Name:align=left,version.version_string:label=Version:align=right,data.size.size(zero="",min=1048576):label=Size:align=right)
+2023-04-07 11:58:26,105 DEBUG    root            Chosen display Format:table[box,title="These components will be installed."](details.display_name:label=Name:align=left,version.version_string:label=Version:align=right,data.size.size(zero="",min=1048576):label=Size:align=right)
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ ┌──────────────────────────────────────────────────────────────────────────┐
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │                   These components will be installed.                    │
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ ├──────────────────────────────────────────────────────┬─────────┬─────────┤
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │                         Name                         │ Version │   Size  │
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ ├──────────────────────────────────────────────────────┼─────────┼─────────┤
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │ 
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ Google Container Registry's Docker credential helper
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___  
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │ 
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___   1.5.0
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___  
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │ 
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 2.2 MiB
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___  
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ │
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ └──────────────────────────────────────────────────────┴─────────┴─────────┘
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,106 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:26,108 DEBUG    urllib3.connectionpool Starting new HTTPS connection (1): dl.google.com:443
+2023-04-07 11:58:26,169 DEBUG    urllib3.connectionpool https://dl.google.com:443 "GET /dl/cloudsdk/channels/rapid/RELEASE_NOTES HTTP/1.1" 200 972555
+2023-04-07 11:58:26,492 INFO     ___FILE_ONLY___ For the latest full release notes, please visit:
+  https://cloud.google.com/sdk/release_notes
+
+
+2023-04-07 11:58:29,317 INFO     ___FILE_ONLY___ ╔════════════════════════════════════════════════════════════╗
+
+2023-04-07 11:58:29,317 INFO     ___FILE_ONLY___ ╠═ Creating update staging area                             ═╣
+
+2023-04-07 11:58:29,317 INFO     ___FILE_ONLY___ ╚
+2023-04-07 11:58:29,318 INFO     ___FILE_ONLY___ ══════
+2023-04-07 11:58:29,318 INFO     ___FILE_ONLY___ ══════
+2023-04-07 11:58:29,318 INFO     ___FILE_ONLY___ ══════
+2023-04-07 11:58:29,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:29,922 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:30,215 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:30,398 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:30,618 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:30,868 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:31,058 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:31,276 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:31,447 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:31,596 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,022 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,181 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,355 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,466 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,596 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,720 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,852 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:32,978 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,092 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,228 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,359 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,510 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,645 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,801 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:33,944 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,087 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,275 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,426 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,590 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,740 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:34,904 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,095 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,257 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,394 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,536 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,689 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:35,997 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,165 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,496 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,578 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,657 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,727 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:36,727 INFO     ___FILE_ONLY___ ╝
+2023-04-07 11:58:37,511 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2023-04-07 11:58:37,511 INFO     ___FILE_ONLY___ ╠═ Installing: Google Container Registry's Docker creden... ═╣
+
+2023-04-07 11:58:37,511 INFO     ___FILE_ONLY___ ╚
+2023-04-07 11:58:37,513 INFO     ___FILE_ONLY___ ════════════════════════════════════════════════════════════
+2023-04-07 11:58:37,513 INFO     ___FILE_ONLY___ ╝
+2023-04-07 11:58:37,514 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2023-04-07 11:58:37,514 INFO     ___FILE_ONLY___ ╠═ Installing: Google Container Registry's Docker creden... ═╣
+
+2023-04-07 11:58:37,514 INFO     ___FILE_ONLY___ ╚
+2023-04-07 11:58:37,516 DEBUG    urllib3.connectionpool Starting new HTTPS connection (1): dl.google.com:443
+2023-04-07 11:58:37,738 DEBUG    urllib3.connectionpool https://dl.google.com:443 "GET /dl/cloudsdk/channels/rapid/components/google-cloud-sdk-docker-credential-gcr-darwin-x86_64-20210205155736.tar.gz HTTP/1.1" 200 2266831
+2023-04-07 11:58:38,750 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,751 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,752 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,752 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,752 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,752 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,753 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,753 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,753 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,753 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,753 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,754 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,755 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,756 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,756 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,756 INFO     ___FILE_ONLY___ ═
+2023-04-07 11:58:38,837 INFO     ___FILE_ONLY___ ══════════════════════════════
+2023-04-07 11:58:38,837 INFO     ___FILE_ONLY___ ╝
+2023-04-07 11:58:38,840 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2023-04-07 11:58:38,840 INFO     ___FILE_ONLY___ ╠═ Creating backup and activating new installation          ═╣
+
+2023-04-07 11:58:38,840 INFO     ___FILE_ONLY___ ╚
+2023-04-07 11:58:38,840 DEBUG    root            Attempting to move directory [/Users/quanianitis/Downloads/google-cloud-sdk] to [/Users/quanianitis/Downloads/google-cloud-sdk.staging/.install/.backup]
+2023-04-07 11:58:38,840 INFO     ___FILE_ONLY___ ══════════════════════════════
+2023-04-07 11:58:38,840 DEBUG    root            Attempting to move directory [/Users/quanianitis/Downloads/google-cloud-sdk.staging] to [/Users/quanianitis/Downloads/google-cloud-sdk]
+2023-04-07 11:58:38,840 INFO     ___FILE_ONLY___ ══════════════════════════════
+2023-04-07 11:58:38,841 INFO     ___FILE_ONLY___ ╝
+
+2023-04-07 11:58:38,843 DEBUG    root            Updating notification cache...
+2023-04-07 11:58:38,844 INFO     ___FILE_ONLY___ 
+
+2023-04-07 11:58:38,844 INFO     ___FILE_ONLY___ Performing post processing steps...
+2023-04-07 11:58:38,844 DEBUG    root            Executing command: ['/opt/homebrew/bin/python3', '-S', '/Users/quanianitis/Downloads/google-cloud-sdk/lib/gcloud.py', 'components', 'post-process']
+2023-04-07 11:58:54,295 DEBUG    ___FILE_ONLY___ 
+2023-04-07 11:58:54,296 DEBUG    ___FILE_ONLY___ 
+2023-04-07 11:58:54,402 INFO     ___FILE_ONLY___ 
+Update done!
+
+
+2023-04-07 11:58:54,423 WARNING  root              There are other instances of Google Cloud tools on your system PATH.
+  Please remove the following to avoid confusion or accidental invocation:
+
+  /Users/quanianitis/Library/Python/3.9/bin/gsutil
+
+  
+2023-04-07 11:58:54,426 DEBUG    root            Chosen display Format:none
+2023-04-07 11:58:54,426 INFO     root            Display format: "none"

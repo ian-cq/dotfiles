@@ -1,0 +1,9 @@
+2023-04-07 13:06:48,361 DEBUG    root            Loaded Command Group: ['gcloud', 'config']
+2023-04-07 13:06:48,376 DEBUG    root            Loaded Command Group: ['gcloud', 'config', 'set']
+2023-04-07 13:06:48,377 DEBUG    root            Running [gcloud.config.set] with arguments: [SECTION/PROPERTY: "compute/zone", VALUE: "asia-southeast1-a"]
+2023-04-07 13:06:48,469 DEBUG    urllib3.connectionpool Starting new HTTPS connection (1): compute.googleapis.com:443
+2023-04-07 13:06:48,986 DEBUG    urllib3.connectionpool https://compute.googleapis.com:443 "POST /batch/compute/v1 HTTP/1.1" 200 None
+2023-04-07 13:06:48,998 INFO     ___FILE_ONLY___ Updated property [compute/zone].
+
+2023-04-07 13:06:48,998 DEBUG    root            Chosen display Format:default
+2023-04-07 13:06:48,999 INFO     root            Display format: "default"
