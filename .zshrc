@@ -127,3 +127,13 @@ if [ -f '/Users/quanianitis/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/qua
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/quanianitis/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="/opt/homebrew/opt/openldap/bin:$PATH" echo export PATH="/opt/homebrew/opt/openldap/sbin:$PATH"
+export PATH="/opt/homebrew/opt/openldap/bin:$PATH" echo export PATH="/opt/homebrew/opt/openldap/sbin:$PATH"
+export PATH="/opt/homebrew/opt/openldap/bin:$PATH"
+export PATH="/opt/homebrew/opt/openldap/sbin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export HOMEBREW_GITHUB_API_TOKEN=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
