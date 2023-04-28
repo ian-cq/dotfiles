@@ -29,6 +29,10 @@ right = ["selections",  "primary-selection-length", "position", "position-percen
 display-inlay-hints = true
 
 [keys.normal]
+"ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
+C-s = ":w" # Maps Ctrl-s to the typable command :w which is an alias for :write (save file)
+g.a = "code_action"  # Maps `ga` to show possible code actions
+
 p = ["paste_clipboard_after", "collapse_selection"]
 P = ["paste_clipboard_before", "collapse_selection"]
 
@@ -69,8 +73,14 @@ space.w.c = "jump_view_left"
 space.w.r = "jump_view_right"
 space.w.t = "jump_view_down"
 space.w.s = "jump_view_up"
-space.N = ":new"
+space.n = ":new"
 g.D = "goto_reference"
+
+backspace.q = ":sh git init ." 
+backspace.w = ":sh git add --all" 
+backspace.e = ":sh git commit -av" 
+backspace.r = ":sh git push" 
+
 
 [keys.insert]
 # Escape the madness! No more fighting with the cursor! Or with multiple cursors!
