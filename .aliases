@@ -16,9 +16,10 @@ alias p="z ~/projects"
 alias g="gitui"
 
 # Always use color output for `ls`
-alias ls="exa"
+alias lsa="ls -la"
 alias cd="z"
 alias cat="bat"
+alias rng="ranger"
 alias du="dust"
 alias pomo="porsmo"
 alias docker="podman"
