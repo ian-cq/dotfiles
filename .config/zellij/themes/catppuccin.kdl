@@ -22,7 +22,8 @@ themes {
         blue 30 102 245
         magenta 234 118 203
         cyan 4 165 229
-        white 220 224 232
+        white 118 128 133
+        // white 220 224 232
         orange 254 100 11
     }
     catppuccin-macchiato {
@@ -48,7 +49,7 @@ themes {
         blue 137 180 250
         magenta 245 194 231
         cyan 137 220 235
-        white 205 214 244
+        white 198 208 245
         orange 250 179 135
     }
 }
