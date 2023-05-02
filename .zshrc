@@ -11,9 +11,9 @@ export ZSH="$HOME/.oh-my-zsh"
 eval $(/opt/homebrew/bin/brew shellenv)
 export PATH=$PATH:/Users/quanianitis/.cargo/bin
 # export PATH="$PATH:$(du "$HOME/.local/bin" | cut -f2 | paste -sd ':'
-export PATH=$PATH:/Users/quanianitis/Library/Python/3.9/bin
 export PATH="$PATH:$(go env GOPATH)/bin"
 export PATH=$PATH:/opt/X11/bin
+export PATH=$PATH:/opt/homebrew/bin
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 # export SDKMAN_DIR="$HOME/.sdkman"
@@ -87,7 +87,18 @@ ZSH_THEME="jonathan" # set by `omz`
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  git
+  aws
+  kubectl
+  kubectx
+  golang
+  aws
+  docker
+  history-substring-search
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -116,9 +127,12 @@ fi
 # Example aliases
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
-alias python3="python"
 alias config='/usr/bin/git --git-dir=/Users/quanianitis/.cfg/ --work-tree=/Users/quanianitis'
 alias ls="exa"
+alias g="gitui"
+
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
 
 eval "$(zoxide init zsh)"
 
@@ -137,3 +151,8 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 export HOMEBREW_GITHUB_API_TOKEN=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
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+eval "$(starship init zsh)"
