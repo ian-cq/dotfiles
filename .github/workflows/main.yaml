@@ -5,6 +5,10 @@ on:
     branches:
       - staging
 
+defaults:
+  run:
+    working-directory: ansible/playbooks
+
 jobs:
   ansible-build:
     runs-on: macos-latest
