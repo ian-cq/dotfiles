@@ -22,5 +22,5 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -c local -i inventory osx.yaml
+          ansible-playbook --tags "osx" -c local -i inventory osx.yaml
 
