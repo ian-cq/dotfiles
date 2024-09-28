@@ -1,35 +1,73 @@
 ---
-- name: Symlink my dotfiles
-  file: src=~/dotfiles/home/{{ item }}
-        dest=~/{{ item }}
-        state=link
-        force=yes
-  with_items:
-    - .vimrc
-    - .zshrc
-    - .zpreztorc
-    - .zlogin
-    - .zlogout
-    - .zshenv
-    - .gitignore
-    - .gitconfig
-    - .tmux.conf
+- name: Ensure Zsh with dependencies are installed
+  apt:
+    name: "{{ ['zsh'] + zsh_dependencies }}"
+    state: present
+    update_cache: yes
+  become: true
 
-- name: Symlink fish config
-  file:
-    src: ~/dotfiles/home/fish_config
-    dest: ~/.config/fish
-    state: link
-    force: yes
+- name: Install Oh My Zsh # noqa: latest
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: ~/.oh-my-zsh
+    depth: 1
 
-- name: Clone tmux plugins
-  git: repo=https://github.com/tmux-plugins/tpm dest=~/.tmux/plugins/tpm
+- name: Install zsh-autosuggestions plugin # noqa: latest
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    depth: 1
 
-- name: Clone Vundle
-  git: repo=https://github.com/gmarik/Vundle.vim.git dest=~/.vim/bundle/Vundle.vim
+- name: Install zsh-completions plugin # noqa: latest
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-completions
+    dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
+    depth: 1
 
-- name: Install/update tmux plugins
-  command: ~/.tmux/plugins/tpm/bin/update_plugins all
+- name: Install zsh-syntax-highlighting plugin # noqa: latest
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    depth: 1
 
-- name: Install/update VIM plugins
-  command: vim +PluginInstall! +qall
+- name: Install autoupdate-zsh-plugin # noqa: latest
+  ansible.builtin.git:
+    repo: https://github.com/TamCore/autoupdate-oh-my-zsh-plugins
+    dest: ~/.oh-my-zsh/custom/plugins/autoupdate
+    depth: 1
+
+- name: Change user shell to zsh 
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/zsh
+
+- stow:
+    state: present
+    package: zsh
+    dir: "$HOME/dotfiles/zsh"
+    target: "$HOME"
+
+- stow:
+    state: present
+    package: git
+    dir: "$HOME/dotfiles/git"
+    target: "$HOME"
+
+- stow:
+    state: present
+    package: config
+    dir: "$HOME/dotfiles/config"
+    target: "$HOME/.config"
+
+- stow:
+    state: present
+    package: ssh
+    dir: "$HOME/dotfiles/ssh"
+    target: "$HOME/.ssh"
+
+- stow:
+    state: present
+    package: steampipe
+    dir: "$HOME/dotfiles/steampipe"
+    target: "$HOME/.steampipe"
