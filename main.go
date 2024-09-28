@@ -22,16 +22,16 @@ func main() {
 		slog.Info("Homebrew already installed", slog.String("path", homebrewPath))
 	}
 
-	// Update and upgrade Homebrew
-	slog.Info("Updating and upgrading Homebrew...")
-	createExec("brew update")
-	createExec("brew upgrade")
+	// // Update and upgrade Homebrew
+	// slog.Info("Updating and upgrading Homebrew...")
+	// createExec("brew update")
+	// createExec("brew upgrade")
 
 	// Install packages from Brewfile
 	homeDir := setHomeDir()
 	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
-	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --verbose --file=" + brewfilePath).String()
+	slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
+	brewOutput, err := script.Exec("brew bundle -v --file=" + brewfilePath).String()
 	if err != nil {
 		log.Fatalf("Failed to run Brewfile: %s", err)
 	}
@@ -71,6 +71,7 @@ func main() {
 	stowDir("dotfiles/config", ".config/gh", "gh")
 	stowDir("dotfiles/config", ".config/zellij", "zellij")
 	stowDir("dotfiles", "", "zsh")
+	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 	stowDir("dotfiles", ".steampipe/config", "steampipe")
