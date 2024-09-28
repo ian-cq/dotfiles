@@ -1,0 +1,22 @@
+name: Ansible MacOS
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  ansible-build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          brew install ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -c local -i inventory osx.yaml
+

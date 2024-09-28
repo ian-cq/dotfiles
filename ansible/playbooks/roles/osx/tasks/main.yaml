@@ -11,11 +11,11 @@
   shell: |
     brew update
     brew install ack curl fish git nmap node python readline ssh-copy-id vim wget zsh httpie tree openssl coreutils findutils mosh htop tmux
-  when: brew_exists.rc == 0
+  when: brew_exists.results[-1].rc == 0
 
 - name: Run brew cleanup
   shell: brew cleanup
-  when: brew_exists.rc == 0
+  when: brew_exists.results[-1].rc == 0
 
 - name: Set macOS screencapture location to ~/Downloads
   shell: defaults write com.apple.screencapture location ~/Downloads && killall SystemUIServer
