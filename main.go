@@ -27,12 +27,8 @@ func main() {
 	createExec("brew update")
 	createExec("brew upgrade")
 
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatalf("Failed to get home directory: %s", err)
-	}
-
 	// Install packages from Brewfile
+	homeDir := setHomeDir()
 	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
 	slog.Info("Installing packages from Brewfile...")
 	brewOutput, err := script.Exec("brew bundle --file=" + brewfilePath).String()
@@ -105,12 +101,11 @@ func cloneGit(repo string, dest string, depth int) {
 	createExec(command)
 }
 
-func stowDir(sourceDir string, destDir string, packageName string) {
+func setHomeDir() string {
 	// Expand $HOME environment variable
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		slog.Error("Error getting home directory", err)
-		return
 	}
 
 	ghaEnv := os.Getenv("ENABLE_CICD")
@@ -119,6 +114,11 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 		homeDir = os.Getenv("ACTIONS_WORKSPACE")
 		homeDir = strings.TrimSuffix(homeDir, "/dotfiles")
 	}
+	return homeDir
+}
+
+func stowDir(sourceDir string, destDir string, packageName string) {
+	homeDir := setHomeDir()
 
 	// Replace $HOME with the actual home directory
 	var targetDir string
