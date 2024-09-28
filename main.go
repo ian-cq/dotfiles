@@ -27,7 +27,7 @@ func main() {
 
 	// Install packages from Brewfile
 	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --file=/github/workspace/dotfiles/homebrew/Brewfile").String()
+	brewOutput, err := script.Exec("brew bundle --file=/github/workspace/homebrew/Brewfile").String()
 	if err != nil {
 		log.Fatalf("Failed to run Brewfile: %s", err)
 	}
