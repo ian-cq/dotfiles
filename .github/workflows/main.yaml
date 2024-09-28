@@ -33,6 +33,7 @@ jobs:
       - name: Post-Installation Verification
         run: |
           cat ${{ github.workspace }}/.config/alacritty/* || true
+          cat ${{ github.workspace }}/.config/helix/* || true
           cat ${{ github.workspace }}/.zshrc || true
           ls ${{ github.workspace }}/.config || true
 
