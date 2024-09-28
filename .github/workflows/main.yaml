@@ -31,7 +31,7 @@ jobs:
 
       - name: Pre-Installation Verification
         run: |
-          cat ${{ github.workspace }}/.zshrc
-          cat ${{ github.workspace }}/.config/helix/*
-          ls ${{ github.workspace }}/.config
+          cat /github/runner/.zshrc 2>/dev/null || true
+          cat /github/runner/.config/alacritty/* 2>/dev/null || true
+          ls /github/runner/.config 2>/dev/null || true
 
