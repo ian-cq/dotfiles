@@ -25,6 +25,12 @@ jobs:
           cat ./library/* 2>/dev/null || true
           cat ./* 2>/dev/null || true
 
+      - name: Install stow
+        run: |
+          brew tap homebrew/core
+          brew extract --version=2.4.0 stow homebrew/cask-versions
+          brew install homebrew/cask-versions/stow@2.4.0
+
       - name: Run Ansible Playbook
         run: |
           ansible-playbook -c local -i inventory osx.yaml

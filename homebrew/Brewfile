@@ -2,7 +2,6 @@ tap "buildpacks/tap"
 
 brew "ansible"
 brew "ansible-language-server"
-brew "stow"
 
 brew "buildpacks/tap/pack"
 
