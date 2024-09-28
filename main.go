@@ -73,9 +73,7 @@ func main() {
 	stowDir("dotfiles", "", "zsh")
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
-	// stowDir(".", "")
-	// stowDir(".", ".ssh/ssh")
-	// stowDir(".", ".steampipe/steampipe")
+	stowDir("dotfiles", ".steampipe/config", "steampipe")
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
