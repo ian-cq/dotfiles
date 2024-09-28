@@ -21,9 +21,9 @@ func main() {
 	}
 
 	// Update and upgrade Homebrew
-	slog.Info("Updating and upgrading Homebrew...")
-	createExec("brew update")
-	createExec("brew upgrade")
+	// slog.Info("Updating and upgrading Homebrew...")
+	// createExec("brew update")
+	// createExec("brew upgrade")
 
 	// Install packages from Brewfile
 	slog.Info("Installing packages from Brewfile...")
@@ -68,11 +68,12 @@ func main() {
 
 	// Stow dotfiles
 	slog.Info("Stowing dotfiles...")
-	stowDir("../../../dotfiles", "$HOME/zsh")
-	stowDir("../../../dotfiles", "$HOME/git")
-	stowDir("../../../dotfiles", "$HOME/.config/config")
-	stowDir("../../../dotfiles", "$HOME/.ssh/ssh")
-	stowDir("../../../dotfiles", "$HOME/.steampipe/steampipe")
+	stowDir("dotfiles/config", ".config/alacritty", "alacritty")
+	stowDir("dotfiles/config", ".config/helix", "helix")
+	stowDir("dotfiles/zsh", "", "zsh")
+	// stowDir(".", "")
+	// stowDir(".", ".ssh/ssh")
+	// stowDir(".", ".steampipe/steampipe")
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
@@ -92,8 +93,28 @@ func cloneGit(repo string, dest string, depth int) {
 	createExec(command)
 }
 
-func stowDir(sourceDir string, targetDir string) {
-	slog.Info("Stowing directory", slog.String("source", sourceDir), slog.String("target", targetDir))
-	command := fmt.Sprintf("stow -d \"%s\" -t \"%s\" %s", sourceDir, targetDir, sourceDir)
-	createExec(command)
+func stowDir(sourceDir string, destDir string, packageName string) {
+	// Expand $HOME environment variable
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		slog.Error("Error getting home directory", err)
+		return
+	}
+
+	// Replace $HOME with the actual home directory
+	var targetDir string
+	sourceDir = fmt.Sprintf("%s/%s", homeDir, sourceDir)
+	if destDir == "" {
+		targetDir = homeDir
+	} else {
+		targetDir = fmt.Sprintf("%s/%s", homeDir, destDir)
+	}
+
+	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
+	command := fmt.Sprintf("stow -d %s -t %s %s", sourceDir, targetDir, packageName)
+
+	if _, err := script.Exec(command).Stdout(); err != nil {
+		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
+	}
 }
