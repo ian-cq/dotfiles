@@ -28,10 +28,11 @@ jobs:
         continue-on-error: true
         env:
           ENABLE_CICD: "true"
+          ACTIONS_WORKSPACE: ${{ github.workspace }}
 
       - name: Pre-Installation Verification
         run: |
-          cat /github/runner/.zshrc 2>/dev/null || true
-          cat /github/runner/.config/alacritty/* 2>/dev/null || true
-          ls /github/runner/.config 2>/dev/null || true
+          cat ${{ github.workspace }}/.zshrc 2>/dev/null || true
+          cat ${{ github.workspace }}/.config/alacritty/* 2>/dev/null || true
+          ls ${{ github.workspace }}/.config 2>/dev/null || true
 

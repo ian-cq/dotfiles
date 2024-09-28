@@ -104,7 +104,7 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	ghaEnv := os.Getenv("ENABLE_CICD")
 
 	if ghaEnv == "true" {
-		homeDir = "/github/workspace"
+		homeDir = os.Getenv("ACTIONS_WORKSPACE")
 	}
 
 	// Replace $HOME with the actual home directory
