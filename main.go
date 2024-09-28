@@ -31,55 +31,55 @@ func main() {
 	homeDir := setHomeDir()
 	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
 	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --verbose --file=" + brewfilePath).String()
-	if err != nil {
-		log.Fatalf("Failed to run Brewfile: %s", err)
-	}
-	slog.Info("Brewfile output", slog.String("output", brewOutput))
 
-	// Cleanup Homebrew
-	slog.Info("Cleaning up Homebrew...")
-	brewCleanup, err := script.Exec("brew cleanup").String()
-	if err != nil {
-		log.Fatalf("Failed to cleanup Brew: %s", err)
-	}
-	slog.Info("Brew cleanup output", slog.String("output", brewCleanup))
+	createExec(fmt.Sprintf("ls %s", strings.TrimSuffix(brewfilePath, "/Brewfile")))
+	createExec(fmt.Sprintf("cat %s", brewfilePath))
+	// brewOutput, err := script.Exec("brew bundle --verbose --file=" + brewfilePath).String()
+	// if err != nil {
+	// 	log.Fatalf("Failed to run Brewfile: %s", err)
+	// }
+	// slog.Info("Brewfile output", slog.String("output", brewOutput))
 
-	// Install ZSH
-	zshPath, err := exec.LookPath("zsh")
-	if err != nil {
-		createExec("brew install zsh")
-	} else {
-		slog.Info("Zsh already installed", slog.String("path", zshPath))
-	}
+	// // Cleanup Homebrew
+	// slog.Info("Cleaning up Homebrew...")
+	// brewCleanup, err := script.Exec("brew cleanup").String()
+	// if err != nil {
+	// 	log.Fatalf("Failed to cleanup Brew: %s", err)
+	// }
+	// slog.Info("Brew cleanup output", slog.String("output", brewCleanup))
 
-	// Install Oh My Zsh
-	slog.Info("Installing Oh My Zsh...")
-	cloneGit("https://github.com/ohmyzsh/ohmyzsh.git", "~/.oh-my-zsh", 1)
+	// // Install ZSH
+	// zshPath, err := exec.LookPath("zsh")
+	// if err != nil {
+	// 	createExec("brew install zsh")
+	// } else {
+	// 	slog.Info("Zsh already installed", slog.String("path", zshPath))
+	// }
 
-	// Install Zsh plugins
-	slog.Info("Installing Zsh plugins...")
-	cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-completions", "~/.oh-my-zsh/custom/plugins/zsh-completions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting", 1)
-	cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "~/.oh-my-zsh/custom/plugins/autoupdate", 1)
+	// // Install Oh My Zsh
+	// slog.Info("Installing Oh My Zsh...")
+	// cloneGit("https://github.com/ohmyzsh/ohmyzsh.git", "~/.oh-my-zsh", 1)
 
-	// Stow dotfiles
-	slog.Info("Stowing dotfiles...")
-	stowDir("dotfiles/config", ".config/alacritty", "alacritty")
-	stowDir("dotfiles/config", ".config/helix", "helix")
-	stowDir("dotfiles/config", ".config/gh", "gh")
-	stowDir("dotfiles/config", ".config/zellij", "zellij")
-	stowDir("dotfiles", "", "zsh")
-	stowDir("dotfiles", "", "aliases")
-	stowDir("dotfiles", "", "git")
-	// stowDir(".", "")
-	// stowDir(".", ".ssh/ssh")
-	// stowDir(".", ".steampipe/steampipe")
+	// // Install Zsh plugins
+	// slog.Info("Installing Zsh plugins...")
+	// cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions", 1)
+	// cloneGit("https://github.com/zsh-users/zsh-completions", "~/.oh-my-zsh/custom/plugins/zsh-completions", 1)
+	// cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting", 1)
+	// cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "~/.oh-my-zsh/custom/plugins/autoupdate", 1)
 
-	// Change user shell to zsh
-	slog.Info("Changing user shell to Zsh...")
-	createExec("zsh")
+	// // Stow dotfiles
+	// slog.Info("Stowing dotfiles...")
+	// stowDir("dotfiles/config", ".config/alacritty", "alacritty")
+	// stowDir("dotfiles/config", ".config/helix", "helix")
+	// stowDir("dotfiles/config", ".config/gh", "gh")
+	// stowDir("dotfiles/config", ".config/zellij", "zellij")
+	// stowDir("dotfiles", "", "zsh")
+	// stowDir("dotfiles", "", "aliases")
+	// stowDir("dotfiles", "", "git")
+
+	// // Change user shell to zsh
+	// slog.Info("Changing user shell to Zsh...")
+	// createExec("zsh")
 }
 
 func createExec(command string) {
