@@ -1,0 +1,35 @@
+---
+- name: Symlink my dotfiles
+  file: src=~/dotfiles/home/{{ item }}
+        dest=~/{{ item }}
+        state=link
+        force=yes
+  with_items:
+    - .vimrc
+    - .zshrc
+    - .zpreztorc
+    - .zlogin
+    - .zlogout
+    - .zshenv
+    - .gitignore
+    - .gitconfig
+    - .tmux.conf
+
+- name: Symlink fish config
+  file:
+    src: ~/dotfiles/home/fish_config
+    dest: ~/.config/fish
+    state: link
+    force: yes
+
+- name: Clone tmux plugins
+  git: repo=https://github.com/tmux-plugins/tpm dest=~/.tmux/plugins/tpm
+
+- name: Clone Vundle
+  git: repo=https://github.com/gmarik/Vundle.vim.git dest=~/.vim/bundle/Vundle.vim
+
+- name: Install/update tmux plugins
+  command: ~/.tmux/plugins/tpm/bin/update_plugins all
+
+- name: Install/update VIM plugins
+  command: vim +PluginInstall! +qall
