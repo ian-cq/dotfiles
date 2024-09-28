@@ -22,20 +22,24 @@ func main() {
 		slog.Info("Homebrew already installed", slog.String("path", homebrewPath))
 	}
 
-	// // Update and upgrade Homebrew
-	// slog.Info("Updating and upgrading Homebrew...")
-	// createExec("brew update")
-	// createExec("brew upgrade")
+	// Skip brew upgrades and installs if in a CICD environment
+	_, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
+	if !ghaEnv {
+		// Update and upgrade Homebrew
+		slog.Info("Updating and upgrading Homebrew...")
+		createExec("brew update")
+		createExec("brew upgrade")
 
-	// Install packages from Brewfile
-	homeDir := setHomeDir()
-	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
-	slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
-	brewOutput, err := script.Exec("brew bundle -v --file=" + brewfilePath).String()
-	if err != nil {
-		log.Fatalf("Failed to run Brewfile: %s", err)
+		// Install packages from Brewfile
+		homeDir := setHomeDir()
+		brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
+		slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
+		brewOutput, err := script.Exec("brew bundle -v --file=" + brewfilePath).String()
+		if err != nil {
+			log.Fatalf("Failed to run Brewfile: %s", err)
+		}
+		slog.Info("Brewfile output", slog.String("output", brewOutput))
 	}
-	slog.Info("Brewfile output", slog.String("output", brewOutput))
 
 	// Cleanup Homebrew
 	slog.Info("Cleaning up Homebrew...")
@@ -101,10 +105,10 @@ func setHomeDir() string {
 		slog.Error("Error getting home directory", err)
 	}
 
-	ghaEnv := os.Getenv("ENABLE_CICD")
+	ghaValue, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
 
-	if ghaEnv == "true" {
-		homeDir = os.Getenv("ACTIONS_WORKSPACE")
+	if ghaEnv {
+		homeDir = ghaValue
 		homeDir = strings.TrimSuffix(homeDir, "/dotfiles")
 	}
 	return homeDir
