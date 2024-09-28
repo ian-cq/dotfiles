@@ -15,13 +15,14 @@ jobs:
           go-version: '1.22'
 
       - name: Build Go
-        run: GOOS=darwin go build -o setup_quanianitis
+        run: GOOS=darwin go build -o /Users/runner/setup_quanianitis
 
       - name: Test Go
         run: go test -v ./...
 
       - name: Run setup_quanianitis
         run: ./setup_quanianitis
+        working-directory: /Users/runner
 
       - name: Pre-Installation Verification
         run: |

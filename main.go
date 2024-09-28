@@ -77,7 +77,7 @@ func main() {
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("chsh -s /bin/zsh")
+	createExec("source ~/.zshrc && exec zsh")
 }
 
 func createExec(command string) {
@@ -95,7 +95,6 @@ func cloneGit(repo string, dest string, depth int) {
 
 func stowDir(sourceDir string, destDir string, packageName string) {
 	// Expand $HOME environment variable
-
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		slog.Error("Error getting home directory", err)
