@@ -21,17 +21,17 @@ func main() {
 	}
 
 	// Update and upgrade Homebrew
-	// slog.Info("Updating and upgrading Homebrew...")
-	// createExec("brew update")
-	// createExec("brew upgrade")
+	slog.Info("Updating and upgrading Homebrew...")
+	createExec("brew update")
+	createExec("brew upgrade")
 
 	// Install packages from Brewfile
-	// slog.Info("Installing packages from Brewfile...")
-	// brewOutput, err := script.Exec("brew bundle --file=/homebrew/Brewfile").String()
-	// if err != nil {
-	// 	log.Fatalf("Failed to run Brewfile: %s", err)
-	// }
-	// slog.Info("Brewfile output", slog.String("output", brewOutput))
+	slog.Info("Installing packages from Brewfile...")
+	brewOutput, err := script.Exec("brew bundle --file=/homebrew/Brewfile").String()
+	if err != nil {
+		log.Fatalf("Failed to run Brewfile: %s", err)
+	}
+	slog.Info("Brewfile output", slog.String("output", brewOutput))
 
 	// Cleanup Homebrew
 	slog.Info("Cleaning up Homebrew...")
@@ -121,7 +121,7 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	}
 
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
-		slog.Warn("Destination directory does not exist, creating it", slog.String("directory", targetDir))
+		slog.Warn("Currently creating directory, destination directory does not exist", slog.String("directory", targetDir))
 		err := exec.Command("mkdir", "-p", targetDir).Run()
 		if err != nil {
 			slog.Error("Failed to create destination directory", slog.String("directory", targetDir), slog.Any("error", err))
@@ -130,13 +130,11 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 		slog.Info("Successfully created destination directory", slog.String("directory", targetDir))
 	}
 
-	createExec(fmt.Sprintf("ls %s", sourceDir))
-	createExec(fmt.Sprintf("ls %s", destDir))
-
 	command := fmt.Sprintf("stow -d %s -t %s %s", sourceDir, targetDir, packageName)
 
-	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
+	slog.Info("Currently stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 	if _, err := script.Exec(command).Stdout(); err != nil {
 		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
 	}
+	slog.Info("Successfully stowed package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 }
