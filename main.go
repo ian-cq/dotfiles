@@ -26,12 +26,12 @@ func main() {
 	// createExec("brew upgrade")
 
 	// Install packages from Brewfile
-	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --file=/github/workspace/homebrew/Brewfile").String()
-	if err != nil {
-		log.Fatalf("Failed to run Brewfile: %s", err)
-	}
-	slog.Info("Brewfile output", slog.String("output", brewOutput))
+	// slog.Info("Installing packages from Brewfile...")
+	// brewOutput, err := script.Exec("brew bundle --file=/homebrew/Brewfile").String()
+	// if err != nil {
+	// 	log.Fatalf("Failed to run Brewfile: %s", err)
+	// }
+	// slog.Info("Brewfile output", slog.String("output", brewOutput))
 
 	// Cleanup Homebrew
 	slog.Info("Cleaning up Homebrew...")

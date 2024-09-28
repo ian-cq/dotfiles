@@ -14,6 +14,9 @@ jobs:
         with:
           go-version: '1.22'
 
+      - name: Install stow
+        run: brew install stow
+
       - name: Build Go
         run: GOOS=darwin go build -o /Users/runner/setup_quanianitis
 
