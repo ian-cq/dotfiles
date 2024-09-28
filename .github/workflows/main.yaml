@@ -27,7 +27,7 @@ jobs:
 
       - name: Install stow
         run: |
-          brew tap homebrew/core
+          brew tap homebrew/core --force
           brew extract --version=2.4.0 stow homebrew/cask-versions
           brew install homebrew/cask-versions/stow@2.4.0
 
