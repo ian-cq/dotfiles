@@ -34,7 +34,7 @@
     repo: https://github.com/TamCore/autoupdate-oh-my-zsh-plugins
     dest: ~/.oh-my-zsh/custom/plugins/autoupdate
     depth: 1
-
+    
 - stow:
     state: present
     package: zsh

@@ -10,30 +10,36 @@ defaults:
     working-directory: ansible/playbooks
 
 jobs:
-  ansible-build:
+  setup-quanianitis:
     runs-on: macos-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
 
-      - name: Install Ansible
-        run: |
-          brew install ansible
+      - name: Install stow
+        run: brew install stow
 
-      - name: Install GNU Stow
-        run: |
-          wget https://raw.githubusercontent.com/caian-org/ansible-stow/v1.2.1/stow
-          mkdir -p ./library
-          mv stow ./library/
+      - name: Build Go
+        run: GOOS=darwin go build -o setup_quanianitis
 
-      - name: Pre-Installation Verification
-        run: |
-          cat ./library/*
-          cat *
+      - name: Test Go
+        run: go test -v ./...
 
-      - name: Run Ansible Playbook
+      - name: Run setup_quanianitis
+        run: ./setup_quanianitis
+        continue-on-error: true
+        env:
+          ENABLE_CICD: "true"
+          ACTIONS_WORKSPACE: ${{ github.workspace }}
+
+      - name: Post-Installation Verification
         run: |
-          ansible-playbook -c local -i inventory osx.yaml
+          cat ${{ github.workspace }}/.config/alacritty/* || true
+          cat ${{ github.workspace }}/.config/helix/* || true
+          cat ${{ github.workspace }}/.zshrc || true
+          ls ${{ github.workspace }}/.config || true
 
       - name: Pre-Installation Verification
         run: |

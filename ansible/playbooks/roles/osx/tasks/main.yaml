@@ -7,7 +7,7 @@
     upgrade_all: true
 
 - name: Install packages from Brewfile
-  command: brew bundle --file=../../homebrew/Brewfile
+  command: brew bundle --file=$HOME/dotfiles/homebrew/Brewfile
   register: brew_output
 
 - debug:
