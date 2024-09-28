@@ -1,0 +1,47 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    pane_template name="tests_under_files" {
+        pane split_direction="horizontal" {
+            children 
+            pane size="20%" 
+        }    
+    }
+    tab_template name="strider_tab" {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        pane split_direction="Vertical" {
+            pane size="15%" {
+                // TODO: when we support sending CWD to plugins, this should start in ./zellij-derver
+                plugin location="zellij:strider"
+            }
+            children
+        }
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    strider_tab name="IDE(Helix)" focus=true {
+        tests_under_files split_direction="vertical" {
+            pane edit="./src/lib.rs"
+        }
+    }
+    tab name="Lazygit (root)" {
+        tests_under_files split_direction="vertical" {
+            pane command="lazygit"
+        }
+    }
+    tab name="Lazydocker (root)" {
+        tests_under_files split_direction="vertical" {
+            pane command="lazydocker"
+        }
+    }
+}
