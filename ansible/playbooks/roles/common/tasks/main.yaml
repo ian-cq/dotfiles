@@ -35,12 +35,6 @@
     dest: ~/.oh-my-zsh/custom/plugins/autoupdate
     depth: 1
 
-- name: Change user shell to zsh 
-  become: true
-  ansible.builtin.user:
-    name: "{{ ansible_user_id }}"
-    shell: /bin/zsh
-
 - stow:
     state: present
     package: zsh
@@ -70,3 +64,9 @@
     package: steampipe
     dir: "$HOME/dotfiles/steampipe"
     target: "$HOME/.steampipe"
+
+- name: Change user shell to zsh 
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/zsh
