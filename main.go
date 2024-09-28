@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// Skip brew upgrades and installs if in a CICD environment
-	_, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
+	ghaValue, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
 	if !ghaEnv {
 		// Update and upgrade Homebrew
 		slog.Info("Updating and upgrading Homebrew...")
@@ -39,6 +39,8 @@ func main() {
 			log.Fatalf("Failed to run Brewfile: %s", err)
 		}
 		slog.Info("Brewfile output", slog.String("output", brewOutput))
+	} else {
+		slog.Info("Skipping... CI/CD Environment", slog.String("environment", ghaValue), slog.String("path", homebrewPath))
 	}
 
 	// Cleanup Homebrew
