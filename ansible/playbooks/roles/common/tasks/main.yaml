@@ -37,23 +37,23 @@
 
 - name: Stow zsh
   shell: |
-    stow -d "$HOME/dotfiles" -t "$HOME" zsh
+    stow -d "../../../dotfiles" -t "$HOME" zsh
 
 - name: Stow git
   shell: |
-    stow -d "$HOME/dotfiles" -t "$HOME" git
+    stow -d "../../../dotfiles" -t "$HOME" git
 
 - name: Stow config directory
   shell: |
-    stow -d "$HOME/dotfiles" -t "$HOME/.config" config
+    stow -d "../../../dotfiles" -t "$HOME/.config" config
 
 - name: Stow ssh
   shell: |
-    stow -d "$HOME/dotfiles" -t "$HOME/.ssh" ssh
+    stow -d "../../../dotfiles" -t "$HOME/.ssh" ssh
 
 - name: Stow steampipe
   shell: |
-    stow -d "$HOME/dotfiles" -t "$HOME/.steampipe" steampipe
+    stow -d "../../../dotfiles" -t "$HOME/.steampipe" steampipe
 
 - name: Change user shell to zsh 
   become: true
