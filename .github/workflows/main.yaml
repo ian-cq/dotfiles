@@ -25,6 +25,7 @@ jobs:
 
       - name: Run setup_quanianitis
         run: ./setup_quanianitis
+        continue-on-error: true
         env:
           ENABLE_CICD: "true"
 

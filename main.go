@@ -77,7 +77,7 @@ func main() {
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("source ~/.zshrc && exec zsh")
+	createExec("exec zsh")
 }
 
 func createExec(command string) {
