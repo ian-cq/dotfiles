@@ -101,6 +101,12 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 		return
 	}
 
+	ghaEnv := os.Getenv("ENABLE_CICD")
+
+	if ghaEnv == "true" {
+		homeDir = "/github/workspace"
+	}
+
 	// Replace $HOME with the actual home directory
 	var targetDir string
 	sourceDir = fmt.Sprintf("%s/%s", homeDir, sourceDir)
@@ -111,6 +117,16 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	}
 
 	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
+
+	if _, err := os.Stat(sourceDir); os.IsNotExist(err) {
+		slog.Warn("Source directory does not exist, creating it", slog.String("directory", sourceDir))
+		err := exec.Command("mkdir", "-p", sourceDir).Run()
+		if err != nil {
+			slog.Error("Failed to create source directory", slog.String("directory", sourceDir), slog.Any("error", err))
+			return
+		}
+		slog.Info("Successfully created source directory", slog.String("directory", sourceDir))
+	}
 
 	createExec(fmt.Sprintf("ls %s", sourceDir))
 	createExec(fmt.Sprintf("cat %s/*", sourceDir))
