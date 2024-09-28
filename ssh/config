@@ -1,0 +1,42 @@
+Include ~/.orbstack/ssh/config
+
+# This is your SSH client configuration
+Host *
+  
+  # Specifies the order in which the client should try authentication methods
+  # This is useful for avoiding password prompts when you have keys available
+  PreferredAuthentications publickey
+  
+  # Specifies a file from which the user's RSA or DSA authentication identity is read.
+  # The default is ~/.ssh/identity for protocol version 1, and ~/.ssh/id_rsa and ~/.ssh/id_dsa for protocol version 2.
+  # Here we are using the ED25519 key pair, which is more secure.
+  IdentityFile ~/.ssh/id_ed25519
+  
+  # If you are using more than one key file you can add another IdentityFile line
+  # IdentityFile ~/.ssh/id_rsa
+
+  # Automatically adds new host keys to the user known hosts files
+  StrictHostKeyChecking accept-new
+  
+  # Enables the sharing of multiple sessions over a single network connection.
+  # If set to 'yes' ssh will listen for connections on a control socket specified using the ControlPath argument.
+  ControlMaster auto
+  
+  # Specifies the timeout (in seconds) used when establishing a SSH connection
+  # Default is 0, meaning no timeout.
+  ConnectTimeout 10
+  
+  # Enable the compression of the data sent to the server
+  Compression yes
+  
+  # Specifies the real user name to log in as. 
+  # This can be useful if you have a different user name on different systems
+  # User myusername
+  AddKeysToAgent yes
+
+Host homelab
+    HostName homelab.quanianitis.com
+    User fedora
+    IdentityFile ~/Library/Keychains/quanianitis.pem
+    AddKeysToAgent yes
+
