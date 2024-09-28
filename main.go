@@ -68,9 +68,9 @@ func main() {
 
 	// Stow dotfiles
 	slog.Info("Stowing dotfiles...")
-	stowDir("dotfiles/config", ".config/alacritty", "alacritty")
-	stowDir("dotfiles/config", ".config/helix", "helix")
-	stowDir("dotfiles/zsh", "", "zsh")
+	stowDir("config", ".config/alacritty", "alacritty")
+	stowDir("config", ".config/helix", "helix")
+	stowDir("zsh", "", "zsh")
 	// stowDir(".", "")
 	// stowDir(".", ".ssh/ssh")
 	// stowDir(".", ".steampipe/steampipe")
