@@ -77,7 +77,7 @@ func main() {
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("exec zsh")
+	createExec("zsh")
 }
 
 func createExec(command string) {
@@ -118,7 +118,7 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 
 	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 
-	if _, err := os.Stat(sourceDir); os.IsNotExist(err) {
+	if _, err := os.Stat(destDir); os.IsNotExist(err) {
 		slog.Warn("Source directory does not exist, creating it", slog.String("directory", sourceDir))
 		err := exec.Command("mkdir", "-p", sourceDir).Run()
 		if err != nil {
