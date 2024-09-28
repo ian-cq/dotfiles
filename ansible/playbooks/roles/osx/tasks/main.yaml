@@ -1,22 +1,25 @@
 ---
-- name: Check if Homebrew is installed and install if missing
-  shell: "{{ item }}"
-  loop:
-    - which brew || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    - eval "$(/opt/homebrew/bin/brew shellenv)"
-  register: brew_exists
-  ignore_errors: true
+- ansible.builtin.homebrew:
+    state: present
 
-- name: Install or upgrade Homebrew packages
-  shell: |
-    brew update
-    brew install ack curl fish git nmap node python readline ssh-copy-id vim wget zsh httpie tree openssl coreutils findutils mosh htop tmux
-  when: brew_exists.results[-1].rc == 0
+- community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
+
+- name: Install packages from Brewfile
+  command: brew bundle --file=$HOME/dotfiles/homebrew/Brewfile
+  register: brew_output
+
+- debug:
+    var: brew_output.stdout_lines
 
 - name: Run brew cleanup
   shell: brew cleanup
-  when: brew_exists.results[-1].rc == 0
+  register: brew_cleanup
+
+- debug:
+    var: brew_cleanup.stdout_lines
 
 - name: Set macOS screencapture location to ~/Downloads
-  shell: defaults write com.apple.screencapture location ~/Downloads && killall SystemUIServer
+  shell: defaults write com.apple.screencapture location ~/Downloads 
   when: ansible_facts['os_family'] == "Darwin"
