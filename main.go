@@ -112,6 +112,12 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	}
 
 	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
+
+	createExec(fmt.Sprintf("ls %s", sourceDir))
+	createExec(fmt.Sprintf("cat %s/*", sourceDir))
+	createExec(fmt.Sprintf("ls %s", destDir))
+	createExec(fmt.Sprintf("cat %s/*", destDir))
+
 	command := fmt.Sprintf("stow -d %s -t %s %s", sourceDir, targetDir, packageName)
 
 	if _, err := script.Exec(command).Stdout(); err != nil {
