@@ -1,7 +1,3 @@
----
-- ansible.builtin.homebrew:
-    state: present
-
 - community.general.homebrew:
     update_homebrew: true
     upgrade_all: true
@@ -13,13 +9,21 @@
 - debug:
     var: brew_output.stdout_lines
 
-- name: Run brew cleanup
-  shell: brew cleanup
-  register: brew_cleanup
+- community.general.homebrew:
+    update_homebrew: true
+    upgrade_all: true
+
+- name: Install packages from Brewfile
+  command: brew bundle --file=$HOME/dotfiles/homebrew/Brewfile
+  register: brew_output
 
 - debug:
-    var: brew_cleanup.stdout_lines
+    var: brew_output.stdout_lines
+
+- name: Run brew cleanup
+  shell: brew cleanup
+  when: brew_exists.results[-1].rc == 0
 
 - name: Set macOS screencapture location to ~/Downloads
-  shell: defaults write com.apple.screencapture location ~/Downloads 
+  shell: defaults write com.apple.screencapture location ~/Downloads && killall SystemUIServer
   when: ansible_facts['os_family'] == "Darwin"
