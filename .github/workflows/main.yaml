@@ -20,7 +20,13 @@ jobs:
         run: |
           brew install ansible
 
+      - name: Download Stow Module for Ansible
+        run: |
+          wget https://raw.githubusercontent.com/caian-org/ansible-stow/v1.2.1/stow
+          mkdir -p ./library
+          mv stow ./library/
+
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook --tags "osx" -c local -i inventory osx.yaml
+          ansible-playbook -c local -i inventory osx.yaml
 

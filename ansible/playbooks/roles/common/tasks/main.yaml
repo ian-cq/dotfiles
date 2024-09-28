@@ -1,12 +1,11 @@
 ---
-- name: Ensure Zsh with dependencies are installed
-  apt:
-    name: "{{ ['zsh'] + zsh_dependencies }}"
+- name: Install ZSH
+  ansible.builtin.package:
+    name: zsh
     state: present
-    update_cache: yes
-  become: true
 
 - name: Install Oh My Zsh # noqa: latest
+  become: true
   ansible.builtin.git:
     repo: https://github.com/ohmyzsh/ohmyzsh.git
     dest: ~/.oh-my-zsh
