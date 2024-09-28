@@ -20,12 +20,6 @@ jobs:
         run: |
           brew install ansible
 
-      - name: Install GNU Stow
-        run: |
-          wget https://raw.githubusercontent.com/caian-org/ansible-stow/v1.2.1/stow
-          mkdir -p ./library
-          mv stow ./library/
-
       - name: Pre-Installation Verification
         run: |
           cat ./library/* 2>/dev/null || true
