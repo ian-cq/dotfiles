@@ -1,4 +1,5 @@
-name: Ansible MacOS
+# .github/workflows/release.yaml
+name: MacOS Build setup_quanianitis
 
 on:
   push:
