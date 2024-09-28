@@ -33,14 +33,9 @@ jobs:
 
       - name: Post-Installation Verification
         run: |
-          cat ${{ github.workspace }}/.config/alacritty/* || true
-          cat ${{ github.workspace }}/.config/helix/* || true
-          cat ${{ github.workspace }}/.zshrc || true
-          ls ${{ github.workspace }}/.config || true
-
-      - name: Pre-Installation Verification
-        run: |
-          cat ~/.zshrc
-          cat ~/.config/helix/*
-          ls ~/.config
+          trimmed_workspace=$(echo "${{ github.workspace }}" | sed 's/\/dotfiles\/dotfiles/\/dotfiles/')
+          cat $trimmed_workspace/.config/alacritty/* || true
+          cat $trimmed_workspace/.config/helix/* || true
+          cat $trimmed_workspace/.zshrc || true
+          ls $trimmed_workspace/.config || true
 
