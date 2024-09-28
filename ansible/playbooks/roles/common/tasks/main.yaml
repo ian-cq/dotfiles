@@ -34,26 +34,36 @@
     repo: https://github.com/TamCore/autoupdate-oh-my-zsh-plugins
     dest: ~/.oh-my-zsh/custom/plugins/autoupdate
     depth: 1
+    
+- stow:
+    state: present
+    package: zsh
+    dir: "$HOME/dotfiles/zsh"
+    target: "$HOME"
 
-- name: Stow zsh
-  shell: |
-    stow -d "../../../dotfiles" -t "$HOME" zsh
+- stow:
+    state: present
+    package: git
+    dir: "$HOME/dotfiles/git"
+    target: "$HOME"
 
-- name: Stow git
-  shell: |
-    stow -d "../../../dotfiles" -t "$HOME" git
+- stow:
+    state: present
+    package: config
+    dir: "$HOME/dotfiles/config"
+    target: "$HOME/.config"
 
-- name: Stow config directory
-  shell: |
-    stow -d "../../../dotfiles" -t "$HOME/.config" config
+- stow:
+    state: present
+    package: ssh
+    dir: "$HOME/dotfiles/ssh"
+    target: "$HOME/.ssh"
 
-- name: Stow ssh
-  shell: |
-    stow -d "../../../dotfiles" -t "$HOME/.ssh" ssh
-
-- name: Stow steampipe
-  shell: |
-    stow -d "../../../dotfiles" -t "$HOME/.steampipe" steampipe
+- stow:
+    state: present
+    package: steampipe
+    dir: "$HOME/dotfiles/steampipe"
+    target: "$HOME/.steampipe"
 
 - name: Change user shell to zsh 
   become: true

@@ -5,6 +5,10 @@ on:
     branches:
       - staging
 
+defaults:
+  run:
+    working-directory: ansible/playbooks
+
 jobs:
   setup-quanianitis:
     runs-on: macos-latest
@@ -36,4 +40,10 @@ jobs:
           cat ${{ github.workspace }}/.config/helix/* || true
           cat ${{ github.workspace }}/.zshrc || true
           ls ${{ github.workspace }}/.config || true
+
+      - name: Pre-Installation Verification
+        run: |
+          cat ~/.zshrc
+          cat ~/.config/helix/*
+          ls ~/.config
 
