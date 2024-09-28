@@ -30,9 +30,9 @@ jobs:
           ENABLE_CICD: "true"
           ACTIONS_WORKSPACE: ${{ github.workspace }}
 
-      - name: Pre-Installation Verification
+      - name: Post-Installation Verification
         run: |
-          cat ${{ github.workspace }}/.zshrc 2>/dev/null || true
-          cat ${{ github.workspace }}/.config/alacritty/* 2>/dev/null || true
-          ls ${{ github.workspace }}/.config 2>/dev/null || true
+          cat ${{ github.workspace }}/.config/alacritty/* || true
+          cat ${{ github.workspace }}/.zshrc || true
+          ls ${{ github.workspace }}/.config || true
 

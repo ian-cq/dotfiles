@@ -116,14 +116,14 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 		targetDir = fmt.Sprintf("%s/%s", homeDir, destDir)
 	}
 
-	if _, err := os.Stat(destDir); os.IsNotExist(err) {
-		slog.Warn("Destination directory does not exist, creating it", slog.String("directory", destDir))
-		err := exec.Command("mkdir", "-p", destDir).Run()
+	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
+		slog.Warn("Destination directory does not exist, creating it", slog.String("directory", targetDir))
+		err := exec.Command("mkdir", "-p", targetDir).Run()
 		if err != nil {
-			slog.Error("Failed to create destination directory", slog.String("directory", destDir), slog.Any("error", err))
+			slog.Error("Failed to create destination directory", slog.String("directory", targetDir), slog.Any("error", err))
 			return
 		}
-		slog.Info("Successfully created destination directory", slog.String("directory", destDir))
+		slog.Info("Successfully created destination directory", slog.String("directory", targetDir))
 	}
 
 	createExec(fmt.Sprintf("ls %s", sourceDir))
