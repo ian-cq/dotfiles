@@ -31,7 +31,7 @@ func main() {
 	homeDir := setHomeDir()
 	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
 	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --file=" + brewfilePath).String()
+	brewOutput, err := script.Exec("brew bundle --verbose --file=" + brewfilePath).String()
 	if err != nil {
 		log.Fatalf("Failed to run Brewfile: %s", err)
 	}
@@ -44,12 +44,6 @@ func main() {
 		log.Fatalf("Failed to cleanup Brew: %s", err)
 	}
 	slog.Info("Brew cleanup output", slog.String("output", brewCleanup))
-
-	// Set macOS screencapture location (only if running on Darwin)
-	if os.Getenv("OSTYPE") == "darwin" {
-		slog.Info("Setting screencapture location to ~/Downloads...")
-		createExec("defaults write com.apple.screencapture location ~/Downloads")
-	}
 
 	// Install ZSH
 	zshPath, err := exec.LookPath("zsh")
