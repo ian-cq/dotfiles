@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 
 	"github.com/bitfield/script"
 )
@@ -25,9 +27,15 @@ func main() {
 	createExec("brew update")
 	createExec("brew upgrade")
 
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatalf("Failed to get home directory: %s", err)
+	}
+
 	// Install packages from Brewfile
+	brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
 	slog.Info("Installing packages from Brewfile...")
-	brewOutput, err := script.Exec("brew bundle --file=/homebrew/Brewfile").String()
+	brewOutput, err := script.Exec("brew bundle --file=" + brewfilePath).String()
 	if err != nil {
 		log.Fatalf("Failed to run Brewfile: %s", err)
 	}
@@ -68,13 +76,13 @@ func main() {
 
 	// Stow dotfiles
 	slog.Info("Stowing dotfiles...")
-	stowDir("config", ".config/alacritty", "alacritty")
-	stowDir("config", ".config/helix", "helix")
-	stowDir("config", ".config/gh", "gh")
-	stowDir("config", ".config/zellij", "zellij")
-	stowDir("", "", "zsh")
-	stowDir("", "", "aliases")
-	stowDir("", "", "git")
+	stowDir("dotfiles/config", ".config/alacritty", "alacritty")
+	stowDir("dotfiles/config", ".config/helix", "helix")
+	stowDir("dotfiles/config", ".config/gh", "gh")
+	stowDir("dotfiles/config", ".config/zellij", "zellij")
+	stowDir("dotfiles", "", "zsh")
+	stowDir("dotfiles", "", "aliases")
+	stowDir("dotfiles", "", "git")
 	// stowDir(".", "")
 	// stowDir(".", ".ssh/ssh")
 	// stowDir(".", ".steampipe/steampipe")
@@ -109,6 +117,7 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 
 	if ghaEnv == "true" {
 		homeDir = os.Getenv("ACTIONS_WORKSPACE")
+		homeDir = strings.TrimSuffix(homeDir, "/dotfiles")
 	}
 
 	// Replace $HOME with the actual home directory
