@@ -1,11 +1,10 @@
-# .github/workflows/release.yaml
+# .github/workflows/main.yaml
 name: MacOS Build setup_quanianitis
 
 on:
   push:
     branches:
       - staging
-      - main
 
 jobs:
   setup-quanianitis:
