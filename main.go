@@ -86,7 +86,7 @@ func main() {
 func createExec(command string) {
 	if _, err := script.Exec(command).Stdout(); err != nil {
 		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
-		log.Fatalf("Command failed: %s", err)
+		return
 	}
 }
 
