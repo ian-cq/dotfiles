@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eo pipefail
+
 repository_owner="quanianitis"
 repository_name="dotfiles"
 
@@ -8,7 +10,8 @@ if [[ "$1" == "--version" && -n "$2" ]]; then
 else
     echo -e "Usage: $0 --version <dotfiles_release_version>\nDefaulting to latest version..."
     sleep 2
-    version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" | jq -r '.tag_name')
+    version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" \
+      | awk -F '"' '/"tag_name"/ {print $4}')
 fi
 
 os=$(uname -s | awk '{print tolower($0)}')
@@ -21,13 +24,18 @@ source_code_path="archive/refs/tags"
 source_code="${version}.tar.gz"
   
 
-curl -O "${base_url}/${binary_path}/${version}/${binary}" \
-     -O "${base_url}/${source_code_path}/${source_code}"
+curl -LO "${base_url}/${binary_path}/${version}/${binary}" \
+     -LO "${base_url}/${source_code_path}/${source_code}"
+# echo "${base_url}/${binary_path}/${version}/${binary}"
+# echo "${base_url}/${source_code_path}/${source_code}"
 
+# echo "${binary}"
+# echo "${source_code}"
 tar -xzvf "${binary}"
 tar -xzvf "${source_code}"
 
-sudo mv setup_quanianitis /usr/local/bin
-mv "dotfiles-${version}" "$HOME/dotfiles"
+cp -r "dotfiles-${version}/" "$HOME/dotfiles"
+sudo mv ./setup_quanianitis /usr/local/bin
 
-cd dotfiles && /usr/local/bin/setup_quanianitis
+cd $HOME/dotfiles && /usr/local/bin/setup_quanianitis
+
