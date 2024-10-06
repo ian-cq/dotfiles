@@ -30,12 +30,14 @@ curl -LO "${base_url}/${binary_path}/${version}/${binary}" \
      -LO "${base_url}/${source_code_path}/${source_code}"
 # echo "${base_url}/${binary_path}/${version}/${binary}"
 # echo "${base_url}/${source_code_path}/${source_code}"
+git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
 
 tar -xzvf "${binary}"
 tar -xzvf "${source_code}"
 
 echo "[INFO] Copying dotfiles to home directory..."
-cp -r "dotfiles-${version}/" "$HOME/dotfiles"
+mkdir -p "$HOME/archives"
+cp -r "dotfiles-${version}" "$HOME/archives"
 sudo mv ./setup_quanianitis /usr/local/bin
 
 echo "[INFO] Running setup_quanianitis script..."

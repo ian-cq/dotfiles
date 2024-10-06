@@ -134,7 +134,7 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 		slog.Info("Successfully created destination directory", slog.String("directory", targetDir))
 	}
 
-	command := fmt.Sprintf("stow -d %s -t %s %s", sourceDir, targetDir, packageName)
+	command := fmt.Sprintf("stow --adopt -d %s -t %s %s", sourceDir, targetDir, packageName)
 
 	slog.Info("Currently stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 	if _, err := script.Exec(command).Stdout(); err != nil {
