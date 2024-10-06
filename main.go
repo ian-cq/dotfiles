@@ -34,11 +34,7 @@ func main() {
 		homeDir := setHomeDir()
 		brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
 		slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
-		brewOutput, err := script.Exec("brew bundle -v --file=" + brewfilePath).String()
-		if err != nil {
-			log.Fatalf("Failed to run Brewfile: %s", err)
-		}
-		slog.Info("Brewfile output", slog.String("output", brewOutput))
+		createExec("brew bundle -v --file=" + brewfilePath)
 	} else {
 		slog.Info("Skipping... CI/CD Environment", slog.String("environment", ghaValue), slog.String("path", homebrewPath))
 	}
