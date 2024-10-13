@@ -14,7 +14,7 @@ fzf_search() {
   fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | fzf --prompt 'All> ' \
                --header 'CTRL-D: Directories / CTRL-F: Files' \
                --bind 'ctrl-d:change-prompt(Directories> )+reload(find * -type d)' \
-               --bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)'
+               --bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)' \
                --bind 'enter:become(nvim {})'
 }
 

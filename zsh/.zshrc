@@ -41,10 +41,6 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # Additional zstyle options
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-
-export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory" # --type from fd
-export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -99,7 +95,7 @@ plugins=(
   fzf-tab
   fzf
   zoxide
-  # zsh-vi-mode
+  zsh-vi-mode
 )
 
 PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
@@ -144,7 +140,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 source <(fzf --zsh)
-
+source $HOME/.zsh-vi-mode.zsh
+source $HOME/.fzf.zsh
 source $ZSH/oh-my-zsh.sh
 
 for file in ~/.{aliases,functions,path,dockerfunc,extra,exports}; do

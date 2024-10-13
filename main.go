@@ -61,10 +61,12 @@ func main() {
 
 	// Install Zsh plugins
 	slog.Info("Installing Zsh plugins...")
-	cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-completions", "~/.oh-my-zsh/custom/plugins/zsh-completions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting", 1)
-	cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "~/.oh-my-zsh/custom/plugins/autoupdate", 1)
+	cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "$ZSH_CUSTOM/plugins/zsh-autosuggestions", 1)
+	cloneGit("https://github.com/zsh-users/zsh-completions", "$ZSH_CUSTOM/plugins/zsh-completions", 1)
+	cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting", 1)
+	cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "$ZSH_CUSTOM/plugins/autoupdate", 1)
+	cloneGit("https://github.com/Aloxaf/fzf-tab", "$ZSH_CUSTOM/plugins/fzf-tab", 1)
+	cloneGit("https://github.com/jeffreytse/zsh-vi-mode", "$ZSH_CUSTOM/plugins/zsh-vi-mode", 1)
 
 	// Stow dotfiles
 	slog.Info("Stowing dotfiles...")
