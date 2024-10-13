@@ -5,6 +5,7 @@ tap "hashicorp/tap"
 tap "homebrew/bundle"
 tap "turbot/tap"
 
+brew "aliyun-cli"
 brew "ansible"
 brew "ansible-language-server"
 brew "argocd"

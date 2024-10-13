@@ -192,7 +192,7 @@
 [user]
 	signingkey = AA61FB5DAB31B38A
 	name = Ian
-	email = ichan@moneylion.com
+	email = work@quanianitis.com
 [credential "https://github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
@@ -204,12 +204,9 @@
 	navigate = true    # use n and N to move between diff sections
 	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
 
-[maintenance]
-	repo = /Users/quanianitis/moneylion-infrastructure/infrastructure
-	auto = true
 [rerere]
 	enabled = true
 	autoUpdate = true
 [push]
-	# autoSetupRemote = true
+	autoSetupRemote = true
 	default = current

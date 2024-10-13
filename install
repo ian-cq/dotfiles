@@ -44,7 +44,7 @@ tar -xzvf "${source_code}"
 # Rename and move files
 echo "[INFO] Copying dotfiles to home directory..."
 mkdir -p "$HOME/archives"
-mv "dotfiles-${version}" "$HOME/archives"
+mv "dotfiles-${version}" "${binary}" "${source_code}" "$HOME/archives"
 sudo mv ./setup_quanianitis /usr/local/bin
 
 # Run setup_quanianitis
