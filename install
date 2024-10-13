@@ -54,7 +54,7 @@ cd $HOME/dotfiles && /usr/local/bin/setup_quanianitis
 # Publish statistics
 echo "[INFO] Collecting and publishing diagnostics data..."
 if [[ "$statistics" == "true" ]]; then
-    diagnostics_file="diagnostics_file.csv"
+    diagnostics_file="diagnostics.csv"
 
     if [[ -z $GITHUB_TOKEN ]]; then
         echo "[WARNING] GITHUB_TOKEN not set. Attempting to authenticate using gh CLI."
@@ -64,11 +64,8 @@ if [[ "$statistics" == "true" ]]; then
 
     git checkout main
     git pull origin main
-    if ! grep -q "Hostname,OS,Date,User" $diagnostics_file; then
-        echo "Hostname,OS,Date,User" > $diagnostics_file
-    fi
-    echo "$(hostname),$(uname -s),$(whoami),$(date +'%Y-%m-%d')" >> $diagnostics_file
     git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git
+    echo "$(hostname),$(uname -s),$(date +'%Y-%m-%d'),$(whoami),$(sysctl -n machdep.cpu.brand_string),$(git rev-parse HEAD),$(hostname -I | awk '{print $1}')" >> $diagnostics_file
     git add $diagnostics_file
     git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles"
     git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" push origin main
