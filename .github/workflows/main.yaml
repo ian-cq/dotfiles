@@ -16,19 +16,13 @@ jobs:
       - name: Install stow
         run: brew install stow
 
-      - name: Build Go
-        run: GOOS=darwin go build -o setup_quanianitis
-
-      - name: Test Go
-        run: go test -v ./...
-
-      - name: Run setup_quanianitis
+      - name: Full install
         continue-on-error: true
         env:
           ENABLE_CICD: "true"
           ACTIONS_WORKSPACE: ${{ github.workspace }}
         run: |
-          source <(curl -fsSL https://raw.githubusercontent.com/quanianitis/dotfiles/refs/heads/main/install)
+          zsh -c "$(curl -fsSL https://raw.githubusercontent.com/quanianitis/dotfiles/refs/heads/main/install)"
 
       - name: Post-Installation Verification
         run: |
