@@ -14,7 +14,7 @@ import:
   # - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
   # - ~/.config/alacritty/catppuccin/catppuccin-macchiato.yml
   # - ~/.config/alacritty/catppuccin/catppuccin-frappe.yml
-- ~/.config/alacritty/catppuccin/catppuccin-latte.yml
+# - ~/.config/alacritty/catppuccin/catppuccin-latte.yml
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -869,6 +869,7 @@ key_bindings:
   - { key: Left,  mods: Alt, chars: "\x1BB" } 
 
  # (macOS only)
+  - { key: F, mods: Control, command: { program: "/bin/bash", args: ["-c", "find * | fzf --prompt 'All> ' --header 'CTRL-D: Directories / CTRL-F: Files' --bind 'ctrl-d:change-prompt(Directories> )+reload(find * -type d)' --bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)'"] } }
   #- { key: K,              mods: Command, mode: ~Vi|~Search, chars: "\x0c"                 }
   #- { key: K,              mods: Command, mode: ~Vi|~Search, action: ClearHistory          }
   #- { key: Key0,           mods: Command,                    action: ResetFontSize         }
@@ -886,7 +887,7 @@ key_bindings:
   #- { key: Q,              mods: Command,                    action: Quit                  }
   #- { key: W,              mods: Command,                    action: Quit                  }
   #- { key: N,              mods: Command,                    action: CreateNewWindow       }
-  #- { key: F,              mods: Command|Control,            action: ToggleFullscreen      }
+  # - { key: F,              mods: Command|Control,            action: ToggleFullscreen      }
   #- { key: F,              mods: Command, mode: ~Search,     action: SearchForward         }
   #- { key: B,              mods: Command, mode: ~Search,     action: SearchBackward        }
 
