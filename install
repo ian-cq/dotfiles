@@ -70,7 +70,8 @@ if [[ "$statistics" == "true" ]]; then
         echo "Hostname,OS,Date,User" > $diagnostics_file
     fi
     echo "$(hostname),$(uname -s),$(whoami),$(date +'%Y-%m-%d')" >> $diagnostics_file
-    git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git    git add $diagnostics_file
+    git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git
+    git add $diagnostics_file
     git commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles "
     git push origin "${version}"
     git push origin main
