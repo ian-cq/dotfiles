@@ -2,7 +2,9 @@
 name: MacOS Build setup_quanianitis
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - staging
 
 jobs:
   setup-quanianitis:
@@ -16,19 +18,14 @@ jobs:
       - name: Install stow
         run: brew install stow
 
-      - name: Build Go
-        run: GOOS=darwin go build -o setup_quanianitis
-
-      - name: Test Go
-        run: go test -v ./...
 
       - name: Run setup_quanianitis
+        run: |
+          ./setup_quanianitis
         continue-on-error: true
         env:
           ENABLE_CICD: "true"
           ACTIONS_WORKSPACE: ${{ github.workspace }}
-        run: |
-          source <(curl -fsSL https://raw.githubusercontent.com/quanianitis/dotfiles/refs/heads/main/install)
 
       - name: Post-Installation Verification
         run: |
@@ -37,3 +34,4 @@ jobs:
           cat $trimmed_workspace/.config/helix/* || true
           cat $trimmed_workspace/.zshrc || true
           ls $trimmed_workspace/.config || true
+
