@@ -21,6 +21,5 @@ export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type directory "
 export FZF_ALT_C_OPTS="--prompt 'All> ' \
 --header 'CTRL-D: Directories / CTRL-F: Files' \
 --bind 'ctrl-d:change-prompt(Directories> )+reload(find * -type d)' \
---bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)' \
---bind 'enter:become(nvim {})'" 
+--bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)'"
 
