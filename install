@@ -44,7 +44,7 @@ tar -xzvf "${source_code}"
 # Rename and move files
 echo "[INFO] Copying dotfiles to home directory..."
 mkdir -p "$HOME/archives"
-cp -r "dotfiles-${version}" "$HOME/archives"
+mv "dotfiles-${version}" "$HOME/archives"
 sudo mv ./setup_quanianitis /usr/local/bin
 
 # Run setup_quanianitis
@@ -58,7 +58,9 @@ if [[ "$statistics" == "true" ]]; then
 
     if [[ -z $GITHUB_TOKEN ]]; then
         echo "[WARNING] GITHUB_TOKEN not set. Attempting to authenticate using gh CLI."
-        gh auth login
+        if ! gh auth status; then
+            gh auth login
+        fi
         GITHUB_TOKEN=$(gh auth token)
     fi
     if [[ "$(uname -s)" == "Darwin" ]]; then
