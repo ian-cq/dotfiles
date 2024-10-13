@@ -2,12 +2,18 @@
 
 set -eo pipefail
 
+# Declare initial variables
 repository_owner="quanianitis"
 repository_name="dotfiles"
+statistics=true
 
+# Declare script behaviour
 if [[ "$1" == "--version" && -n "$2" ]]; then
     version="$2"
     echo "[INFO] Version provided: ${version}"
+elif [[ "$1" == "--ignore-statistics" || "$3" == "--ignore-statistics" ]]; then
+    statistics=false
+    echo "[INFO] Statistics collection disabled."
 else
     echo -e "Usage: $0 --version <dotfiles_release_version>\nDefaulting to latest version..."
     sleep 2
@@ -16,6 +22,7 @@ else
     echo "[INFO] Latest version found: ${version}"
 fi
 
+# Declare script variables
 os=$(uname -s | awk '{print tolower($0)}')
 arch=$(uname -m | sed 's/x86_64/amd64/;s/arm64/arm64/;s/aarch64/arm64/')
 
@@ -25,22 +32,50 @@ binary="setup_quanianitis-${version}-${os}-${arch}.tar.gz"
 source_code_path="archive/refs/tags"
 source_code="${version}.tar.gz"
   
+# Download binaries and repository source code
 echo "[INFO] Downloading binaries and source code for version ${version}..."
 curl -LO "${base_url}/${binary_path}/${version}/${binary}" \
      -LO "${base_url}/${source_code_path}/${source_code}"
-# echo "${base_url}/${binary_path}/${version}/${binary}"
-# echo "${base_url}/${source_code_path}/${source_code}"
 git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
 
 tar -xzvf "${binary}"
 tar -xzvf "${source_code}"
 
+# Rename and move files
 echo "[INFO] Copying dotfiles to home directory..."
 mkdir -p "$HOME/archives"
 cp -r "dotfiles-${version}" "$HOME/archives"
 sudo mv ./setup_quanianitis /usr/local/bin
 
+# Run setup_quanianitis
 echo "[INFO] Running setup_quanianitis script..."
 cd $HOME/dotfiles && /usr/local/bin/setup_quanianitis
+
+# Publish statistics
+echo "[INFO] Collecting and publishing diagnostics data..."
+if [[ "$statistics" == "true" ]]; then
+    diagnostics_file="diagnostics_file.csv"
+
+    git config user.email "bot@quanianitis.com"
+    git config user.name "bot@quanianitis.com"
+    if [[ -z $GITHUB_TOKEN ]]; then
+        echo "[WARNING] GITHUB_TOKEN not set. Attempting to authenticate using gh CLI."
+        gh auth login
+        GITHUB_TOKEN=$(gh auth token)
+    fi
+
+    git checkout main
+    git pull origin main
+    if ! grep -q "Hostname,OS,Date,User" $diagnostics_file; then
+        echo "Hostname,OS,Date,User" > $diagnostics_file
+    fi
+    echo "$(hostname),$(uname -s),$(whoami),$(date +'%Y-%m-%d')" >> $diagnostics_file
+    git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git    git add $diagnostics_file
+    git commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles "
+    git push origin "${version}"
+    git push origin main
+
+    echo "[INFO] Statistics logged and published"
+fi
 
 echo "[INFO] Script completed successfully!"
