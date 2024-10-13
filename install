@@ -61,7 +61,6 @@ if [[ "$statistics" == "true" ]]; then
         gh auth login
         GITHUB_TOKEN=$(gh auth token)
     fi
-
     git checkout main
     git pull origin main
     git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git

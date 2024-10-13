@@ -17,7 +17,6 @@ jobs:
         run: brew install stow
 
       - name: Full install
-        continue-on-error: true
         env:
           ENABLE_CICD: "true"
           ACTIONS_WORKSPACE: ${{ github.workspace }}
