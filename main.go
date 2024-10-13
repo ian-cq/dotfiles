@@ -72,6 +72,7 @@ func main() {
 	stowDir("dotfiles/config", ".config/helix", "helix")
 	stowDir("dotfiles/config", ".config/gh", "gh")
 	stowDir("dotfiles/config", ".config/zellij", "zellij")
+	stowDir("dotfiles/config", ".config/nvim", "nvim")
 	stowDir("dotfiles", "", "zsh")
 	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
