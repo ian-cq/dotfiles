@@ -8,11 +8,22 @@ alias .....="z ../../../.."
 alias cd="z" # `cd` is probably faster to type though
 alias cdroot="cd $(git rev-parse --show-toplevel)"
 
+# FZF directory search
+alias find="fd"
+fzf_search() {
+  fd --type f --strip-cwd-prefix --hidden --follow --exclude .git | fzf --prompt 'All> ' \
+               --header 'CTRL-D: Directories / CTRL-F: Files' \
+               --bind 'ctrl-d:change-prompt(Directories> )+reload(find * -type d)' \
+               --bind 'ctrl-f:change-prompt(Files> )+reload(find * -type f)'
+}
+
+zle -N fzf_search
+bindkey '^f' fzf_search
+
 # Shortcuts
 alias dl="z ~/Downloads"
 alias dt="z ~/Desktop"
 alias p="z ~/projects"
-alias gitui="gitui -t mocha.ron"
 
 # Always use color output for `ls`
 alias lsa="ls -la"
@@ -25,11 +36,15 @@ alias diff="delta"
 alias :q="exit"
 alias tf="terraform"
 alias nv="nvim"
-alias vim="hx"
+alias vim="nvim"
 
 # Kubernetes
 alias ktx="kubectx"
 alias kns="kubens"
+
+# History searches
+bindkey '^k' history-search-backward
+bindkey '^j' history-search-forward
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
