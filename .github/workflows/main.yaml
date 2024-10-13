@@ -1,5 +1,5 @@
 # .github/workflows/main.yaml
-name: MacOS Build setup_quanianitis
+name: Full MacOS dotfiles setup_quanianitis
 
 on:
   workflow_dispatch:
