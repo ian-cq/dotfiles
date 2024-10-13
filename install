@@ -56,8 +56,6 @@ echo "[INFO] Collecting and publishing diagnostics data..."
 if [[ "$statistics" == "true" ]]; then
     diagnostics_file="diagnostics_file.csv"
 
-    git config user.email "bot@quanianitis.com"
-    git config user.name "bot@quanianitis.com"
     if [[ -z $GITHUB_TOKEN ]]; then
         echo "[WARNING] GITHUB_TOKEN not set. Attempting to authenticate using gh CLI."
         gh auth login
@@ -72,9 +70,8 @@ if [[ "$statistics" == "true" ]]; then
     echo "$(hostname),$(uname -s),$(whoami),$(date +'%Y-%m-%d')" >> $diagnostics_file
     git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git
     git add $diagnostics_file
-    git commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles "
-    git push origin "${version}"
-    git push origin main
+    git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles"
+    git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" push origin main
 
     echo "[INFO] Statistics logged and published"
 fi
