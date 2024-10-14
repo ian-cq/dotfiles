@@ -8,18 +8,25 @@ on:
 
 jobs:
   setup-quanianitis:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
+      - name: Set up Homebrew
+        if: {{ matrix.os == 'ubuntu-latest' }}
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: Install stow
         run: brew install stow
 
       - name: Build Go
-        run: GOOS=darwin go build -o setup_quanianitis
+        run: GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o setup_quanianitis
 
       - name: Test Go
         run: go test -v ./...
