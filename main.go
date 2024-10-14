@@ -85,7 +85,8 @@ func main() {
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 
-	slog.Info("Telling 'System Preferences to quite...'")
+
+	slog.Info("Telling 'System Preferences to quit...'")
 	createExec("osascript -e 'tell application \"System Preferences\" to quit'")
 	createExec(fmt.Sprintf("sudo scutil --set ComputerName %s", HOSTNAME))
 	createExec(fmt.Sprintf("sudo scutil --set HostName %s", HOSTNAME))
