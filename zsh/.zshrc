@@ -98,7 +98,6 @@ plugins=(
   # zsh-vi-mode
 )
 
-PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # User configuration
@@ -143,7 +142,7 @@ source $HOME/.fzf.zsh
 # source <(fzf --zsh)
 source $ZSH/oh-my-zsh.sh
 
-for file in ~/.{aliases,functions,path,dockerfunc,extra,exports}; do
+for file in ~/.{aliases,zsh_functions,path,dockerfunc,extra,exports}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file" >/dev/null 2>&1;
 done;#
 

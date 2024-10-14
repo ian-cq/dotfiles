@@ -64,9 +64,11 @@
     # =========================[ Line #1 ]=========================
     command_execution_time    # previous command duration
     virtualenv                # python virtual environment
+    kubecontext             # current kubernetes context (https://kubernetes.io/)
+    terraform               # terraform workspace (https://www.terraform.io)  )
     context                   # user@host
-    time                      # current time
     # =========================[ Line #2 ]=========================
+    time                      # current time
     newline                   # \n
   )
 
