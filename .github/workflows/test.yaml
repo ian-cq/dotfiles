@@ -19,7 +19,7 @@ jobs:
           go-version: '1.22'
 
       - name: Set up Homebrew
-        if: {{ matrix.os == 'ubuntu-latest' }}
+        if: matrix.os == 'ubuntu-latest'
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install stow
