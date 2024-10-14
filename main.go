@@ -128,7 +128,7 @@ func main() {
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 	} else {
 		slog.Info("Updating Hostname...")
-		createExec(fmt.Sprintf("hostnamectl set-hostname '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo hostnamectl set-hostname '%s'", HOSTNAME))
 		slog.Warn("System Preferences Configuration is only available for MacOS. Skipping...")
 	}
 
