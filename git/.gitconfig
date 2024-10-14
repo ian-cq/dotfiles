@@ -191,7 +191,7 @@
 	required = true
 [user]
 	signingkey = AA61FB5DAB31B38A
-	name = Ian
+	name = Chan Quan Ian
 	email = work@quanianitis.com
 [credential "https://github.com"]
 	helper = 
