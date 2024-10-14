@@ -1,5 +1,5 @@
-# Ian's 
-## Demo
+# Ian's Dotfiles
+
 <img width="1702" alt="image" src="https://github.com/user-attachments/assets/461dfbe9-51d7-4b95-b659-a536c9709172">
 
 ## Description
