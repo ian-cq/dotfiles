@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/bitfield/script"
@@ -85,50 +86,55 @@ func main() {
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 
+	slog.Info("Configuring System Preferences...")
+	if runtime.GOOS == "darwin" {
+		slog.Info("Updating Hostname...")
+		createExec("osascript -e 'tell application \"System Preferences\" to quit'")
+		createExec(fmt.Sprintf("sudo scutil --set ComputerName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set HostName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set LocalHostName '%s'", HOSTNAME))
+		// Appearance
+		slog.Info("Updating System Settings' Appearance")
+		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
+		writeMacDefaults("NSGlobalDomain", "AppleShowScrollBars", "-string 'WhenScrolling'")
 
-	slog.Info("Telling 'System Preferences to quit...'")
-	createExec("osascript -e 'tell application \"System Preferences\" to quit'")
-	createExec(fmt.Sprintf("sudo scutil --set ComputerName %s", HOSTNAME))
-	createExec(fmt.Sprintf("sudo scutil --set HostName %s", HOSTNAME))
-	createExec(fmt.Sprintf("sudo scutil --set LocalHostName %s", HOSTNAME))
+		// Desktop & Dock
+		slog.Info("Updating System Settings' Docks and Desktop")
+		writeMacDefaults("com.apple.dock", "tilesize", "-int 32")
+		writeMacDefaults("com.apple.dock", "mineffect", "-string 'scale'")
+		writeMacDefaults("com.apple.dock", "orientation", "-string 'left'")
+		writeMacDefaults("com.apple.dock", "magnification", "-bool true")
+		writeMacDefaults("com.apple.dock", "static-only", "-bool true")
+		writeMacDefaults("com.apple.dock", "autohide", "-bool true")
 
-	// Appearance
-	slog.Info("Updating System Settings' Appearance")
-	writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
-	writeMacDefaults("NSGlobalDomain", "AppleShowScrollBars", "-string 'WhenScrolling'")
+		// Trackpad, mouse, keyboard, Bluetooth accessories, and input
+		slog.Info("Updating System Settings' Trackpad")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadRightClick", "-bool true")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerFromRightEdgeSwipeGesture", "-int 3")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerDrag", "-int 0")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerHorizSwipeGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerTapGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerVertSwipeGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFiveFingerPinchGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerHorizSwipeGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerPinchGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerVertSwipeGesture", "-int 2")
+		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadHorizScroll", "-bool true")
+		writeMacDefaults("NSGlobalDomain", "com.apple.trackpad.enableSecondaryClick", "-bool true")
 
-	// Desktop & Dock
-	slog.Info("Updating System Settings' Docks and Desktop")
-	writeMacDefaults("com.apple.dock", "tilesize", "-int 32")
-	writeMacDefaults("com.apple.dock", "mineffect", "-string 'scale'")
-	writeMacDefaults("com.apple.dock", "orientation", "-string 'left'")
-	writeMacDefaults("com.apple.dock", "magnification", "-bool true")
-	writeMacDefaults("com.apple.dock", "static-only", "-bool true")
-	writeMacDefaults("com.apple.dock", "autohide", "-bool true")
-
-	// Trackpad, mouse, keyboard, Bluetooth accessories, and input
-	slog.Info("Updating System Settings' Trackpad")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadRightClick", "-bool true")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerFromRightEdgeSwipeGesture", "-int 3")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerDrag", "-int 0")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerHorizSwipeGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerTapGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerVertSwipeGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFiveFingerPinchGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerHorizSwipeGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerPinchGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerVertSwipeGesture", "-int 2")
-	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadHorizScroll", "-bool true")
-	writeMacDefaults("NSGlobalDomain", "com.apple.trackpad.enableSecondaryClick", "-bool true")
-
-	// Scrolling
-	writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
+		// Scrolling
+		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
+	} else {
+		slog.Info("Updating Hostname...")
+		createExec(fmt.Sprintf("hostnamectl set-hostname '%s'", HOSTNAME))
+		slog.Warn("System Preferences Configuration is only available for MacOS. Skipping...")
+	}
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("exec zsh")
+	createExec("zsh")
 	slog.Info("Completed setup_quanianitis")
 }
 
