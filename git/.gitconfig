@@ -190,7 +190,7 @@
 	process = git-lfs filter-process
 	required = true
 [user]
-	signingkey = AA61FB5DAB31B38A
+	signingkey = 03D21858C2832B22
 	name = Chan Quan Ian
 	email = work@quanianitis.com
 [credential "https://github.com"]
