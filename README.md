@@ -36,14 +36,14 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/head
 - Github Actions for build, test and release
 - Git subtrees for some forked repositories
 
-
-
 ## Limitations
 
 Haven't tested out on Linux as much. And a lot of the mac settings will definitely error out in linux's environment, but I intend to use homebrew and oh my zsh in a linux environment either way because it's what I've worked with all the time.
 
+**List of Hosts** - [diagnostics.csv](https://github.com/ian-cq/dotfiles/blob/HEAD/diagnostics.csv)
+
 **TODO**
-- [] Golang script to sync configurations on a cron basis
-- [] Include networking dotfiles (other than ssh)
-- [] Include 1password autologin
-- [] Neovim - migrate from helix to nvim
+- [ ] Golang script to sync configurations on a cron basis
+- [ ] Include networking dotfiles (other than ssh)
+- [ ] Include 1password autologin
+- [ ] Neovim - migrate from helix to nvim
