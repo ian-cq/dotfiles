@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # Declare initial variables
-repository_owner="quanianitis"
+repository_owner="ian-cq"
 repository_name="dotfiles"
 statistics=true
 
@@ -75,8 +75,8 @@ if [[ "$statistics" == "true" ]]; then
     git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git
     echo "$(hostname),$(whoami),$(uname -s),$cpu_info,$ip_address,$(git rev-parse HEAD),$(date +'%Y-%m-%d')" >> $diagnostics_file
     git add $diagnostics_file
-    git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles"
-    git -c user.email="quanianitis" -c user.name="bot@quanianitis.com" push origin main
+    git -c user.email="bot@quanianitis.com" -c user.name="quanianitis.com" commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles"
+    git -c user.email="bot@quanianitis.com" -c user.name="quanianitis.com"  push origin main
 
     echo "[INFO] Statistics logged and published"
 fi
