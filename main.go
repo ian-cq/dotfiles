@@ -65,12 +65,12 @@ func main() {
 
 	// Install Zsh plugins
 	slog.Info("Installing Zsh plugins...")
-	cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "$ZSH_CUSTOM/plugins/zsh-autosuggestions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-completions", "$ZSH_CUSTOM/plugins/zsh-completions", 1)
-	cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting", 1)
-	cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "$ZSH_CUSTOM/plugins/autoupdate", 1)
-	cloneGit("https://github.com/Aloxaf/fzf-tab", "$ZSH_CUSTOM/plugins/fzf-tab", 1)
-	cloneGit("https://github.com/jeffreytse/zsh-vi-mode", "$ZSH_CUSTOM/plugins/zsh-vi-mode", 1)
+	cloneGit("https://github.com/zsh-users/zsh-autosuggestions", "~/.oh-my-zsh/custom/plugins/zsh-autosuggestions", 1)
+	cloneGit("https://github.com/zsh-users/zsh-completions", "~/.oh-my-zsh/custom/plugins/zsh-completions", 1)
+	cloneGit("https://github.com/zsh-users/zsh-syntax-highlighting", "~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting", 1)
+	cloneGit("https://github.com/TamCore/autoupdate-oh-my-zsh-plugins", "~/.oh-my-zsh/custom/plugins/autoupdate", 1)
+	cloneGit("https://github.com/Aloxaf/fzf-tab", "~/.oh-my-zsh/custom/plugins/fzf-tab", 1)
+	cloneGit("https://github.com/jeffreytse/zsh-vi-mode", "~/.oh-my-zsh/custom/plugins/zsh-vi-mode", 1)
 
 	// Stow dotfiles
 	slog.Info("Stowing dotfiles...")
@@ -85,16 +85,20 @@ func main() {
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 
+
+	slog.Info("Telling 'System Preferences to quit...'")
 	createExec("osascript -e 'tell application \"System Preferences\" to quit'")
 	createExec(fmt.Sprintf("sudo scutil --set ComputerName %s", HOSTNAME))
 	createExec(fmt.Sprintf("sudo scutil --set HostName %s", HOSTNAME))
 	createExec(fmt.Sprintf("sudo scutil --set LocalHostName %s", HOSTNAME))
 
 	// Appearance
+	slog.Info("Updating System Settings' Appearance")
 	writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
 	writeMacDefaults("NSGlobalDomain", "AppleShowScrollBars", "-string 'WhenScrolling'")
 
 	// Desktop & Dock
+	slog.Info("Updating System Settings' Docks and Desktop")
 	writeMacDefaults("com.apple.dock", "tilesize", "-int 32")
 	writeMacDefaults("com.apple.dock", "mineffect", "-string 'scale'")
 	writeMacDefaults("com.apple.dock", "orientation", "-string 'left'")
@@ -103,6 +107,7 @@ func main() {
 	writeMacDefaults("com.apple.dock", "autohide", "-bool true")
 
 	// Trackpad, mouse, keyboard, Bluetooth accessories, and input
+	slog.Info("Updating System Settings' Trackpad")
 	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
 	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
 	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadRightClick", "-bool true")
@@ -123,7 +128,8 @@ func main() {
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("zsh")
+	createExec("exec zsh")
+	slog.Info("Completed setup_quanianitis")
 }
 
 func createExec(command string) {
@@ -135,7 +141,7 @@ func createExec(command string) {
 
 func writeMacDefaults(macDomain string, macKey string, macValue string) {
 	var command string
-	command = fmt.Sprintf("defaults -g write %s %s %s", macDomain, macKey, macValue)
+	command = fmt.Sprintf("defaults write %s %s %s", macDomain, macKey, macValue)
 
 	createExec(command)
 }
