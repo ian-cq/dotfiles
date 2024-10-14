@@ -3,10 +3,16 @@ name: Full MacOS dotfiles setup_quanianitis
 
 on:
   workflow_dispatch:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   setup-quanianitis:
     runs-on: macos-latest
+    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
