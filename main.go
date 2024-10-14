@@ -90,9 +90,9 @@ func main() {
 	if runtime.GOOS == "darwin" {
 		slog.Info("Updating Hostname...")
 		createExec("osascript -e 'tell application \"System Preferences\" to quit'")
-		createExec(fmt.Sprintf("sudo scutil --set ComputerName %s", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set HostName %s", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set LocalHostName %s", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set ComputerName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set HostName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set LocalHostName '%s'", HOSTNAME))
 		// Appearance
 		slog.Info("Updating System Settings' Appearance")
 		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
@@ -128,13 +128,13 @@ func main() {
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 	} else {
 		slog.Info("Updating Hostname...")
-		createExec(fmt.Sprintf("hostnamectl set-hostname %s", HOSTNAME))
+		createExec(fmt.Sprintf("hostnamectl set-hostname '%s'", HOSTNAME))
 		slog.Warn("System Preferences Configuration is only available for MacOS. Skipping...")
 	}
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
-	createExec("exec zsh")
+	createExec("zsh")
 	slog.Info("Completed setup_quanianitis")
 }
 
