@@ -12,6 +12,10 @@ import (
 	"github.com/bitfield/script"
 )
 
+const (
+	HOSTNAME = "Hannah Arendt"
+)
+
 func main() {
 	// Install Homebrew (state: present)
 	slog.Info("Ensuring Homebrew is installed...")
@@ -75,11 +79,47 @@ func main() {
 	stowDir("dotfiles/config", ".config/gh", "gh")
 	stowDir("dotfiles/config", ".config/zellij", "zellij")
 	stowDir("dotfiles/config", ".config/nvim", "nvim")
+	stowDir("dotfiles", ".steampipe/config", "steampipe")
 	stowDir("dotfiles", "", "zsh")
 	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
-	stowDir("dotfiles", ".steampipe/config", "steampipe")
+
+	createExec("osascript -e 'tell application \"System Preferences\" to quit'")
+	createExec(fmt.Sprintf("sudo scutil --set ComputerName %s", HOSTNAME))
+	createExec(fmt.Sprintf("sudo scutil --set HostName %s", HOSTNAME))
+	createExec(fmt.Sprintf("sudo scutil --set LocalHostName %s", HOSTNAME))
+
+	// Appearance
+	writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
+	writeMacDefaults("NSGlobalDomain", "AppleShowScrollBars", "-string 'WhenScrolling'")
+
+	// Desktop & Dock
+	writeMacDefaults("com.apple.dock", "tilesize", "-int 32")
+	writeMacDefaults("com.apple.dock", "mineffect", "-string 'scale'")
+	writeMacDefaults("com.apple.dock", "orientation", "-string 'left'")
+	writeMacDefaults("com.apple.dock", "magnification", "-bool true")
+	writeMacDefaults("com.apple.dock", "static-only", "-bool true")
+	writeMacDefaults("com.apple.dock", "autohide", "-bool true")
+
+	// Trackpad, mouse, keyboard, Bluetooth accessories, and input
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadRightClick", "-bool true")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerFromRightEdgeSwipeGesture", "-int 3")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerDrag", "-int 0")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerHorizSwipeGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerTapGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadThreeFingerVertSwipeGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFiveFingerPinchGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerHorizSwipeGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerPinchGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadFourFingerVertSwipeGesture", "-int 2")
+	writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadHorizScroll", "-bool true")
+	writeMacDefaults("NSGlobalDomain", "com.apple.trackpad.enableSecondaryClick", "-bool true")
+
+	// Scrolling
+	writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 
 	// Change user shell to zsh
 	slog.Info("Changing user shell to Zsh...")
@@ -91,6 +131,13 @@ func createExec(command string) {
 		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
 		return
 	}
+}
+
+func writeMacDefaults(macDomain string, macKey string, macValue string) {
+	var command string
+	command = fmt.Sprintf("defaults -g write %s %s %s", macDomain, macKey, macValue)
+
+	createExec(command)
 }
 
 func cloneGit(repo string, dest string, depth int) {
