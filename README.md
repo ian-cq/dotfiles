@@ -1,10 +1,27 @@
-# Ian's Dotfiles
+# Ian's 
+## Demo
+<img width="1702" alt="image" src="https://github.com/user-attachments/assets/461dfbe9-51d7-4b95-b659-a536c9709172">
+
 ## Description
 
 This repository is my personal dotfiles containing a collection of configuration settings for my day-to-day applications and automation scripts to set it up initially. Made to be streamlined across all environments including MacOS (both Darwin x86-64 and arm64 and Linux).
 
 To sync across devices, I use GNU stow for my symlinks and this git repository's contents, a Golang script to initiate installation (and sync configurations #TODO) and an initial bootstrap script to make it even more simpler for the machine init.
 
+## Prerequisites
+```
+curl --version
+tar --version
+git --version
+```
+
+## Install
+
+```
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
+```
+
+## Catalogue
 ### List of Configurations
 - zsh
 - aliases
@@ -26,18 +43,7 @@ To sync across devices, I use GNU stow for my symlinks and this git repository's
 - Github Actions for build, test and release
 - Git subtrees for some forked repositories
 
-## Prerequisites
-```
-curl --version
-tar --version
-git --version
-```
 
-## Install
-
-```
-zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
-```
 
 ## Limitations
 
