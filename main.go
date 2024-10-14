@@ -135,7 +135,7 @@ func createExec(command string) {
 
 func writeMacDefaults(macDomain string, macKey string, macValue string) {
 	var command string
-	command = fmt.Sprintf("defaults -g write %s %s %s", macDomain, macKey, macValue)
+	command = fmt.Sprintf("defaults write %s %s %s", macDomain, macKey, macValue)
 
 	createExec(command)
 }
