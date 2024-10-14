@@ -1,0 +1,29 @@
+layout {
+    default_tab_template name="Default" {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    tab name="IDE" cwd="$HOME" focus=true {
+        pane split_direction="Vertical" {
+            pane split_direction="Horizontal" {
+                pane
+                pane
+                pane size="25%"
+            }
+            pane size="60%"
+        }
+    }
+    tab name="Infrastructure" cwd="$HOME/Documents" hide_floating_panes=true {
+        floating_panes {
+            pane command="gitui"
+        }
+    }
+    tab name="Wildcard" cwd="$HOME/Development"
+    tab name="Production" command="kubeon"
+}
+

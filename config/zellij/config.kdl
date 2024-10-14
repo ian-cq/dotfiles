@@ -175,9 +175,9 @@ keybinds {
 }
 
 plugins {
-    // tab-bar { path "tab-bar"; }
-    // status-bar { path "status-bar"; }
-    strider { path "strider"; }
+    tab-bar { path "tab-bar"; }
+    status-bar { path "status-bar"; }
+    // strider { path "strider"; }
     // compact-bar { path "compact-bar"; }
 }
 
@@ -206,7 +206,6 @@ plugins {
 //   - true (default)
 //   - false
 //
-// pane_frames true
 
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
@@ -243,7 +242,7 @@ theme "catppuccin-mocha"
 // The name of the default layout to load on startup
 // Default: "default"
 //
-default_layout "compact"
+// default_layout "compact"
 
 // Choose the mode that zellij uses when starting up.
 // Default: normal
