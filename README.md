@@ -1,19 +1,12 @@
 # Ian's Dotfiles
 
-<img width="1702" alt="image" src="https://github.com/user-attachments/assets/461dfbe9-51d7-4b95-b659-a536c9709172">
+<img width="1710" alt="image" src="https://github.com/user-attachments/assets/0f039c1b-6e1c-49c1-8680-120f9f6422c8">
 
 ## Description
 
 This repository is my personal dotfiles containing a collection of configuration settings for my day-to-day applications and automation scripts to set it up initially. Made to be streamlined across all environments including MacOS (both Darwin x86-64 and arm64 and Linux).
 
 To sync across devices, I use GNU stow for my symlinks and this git repository's contents, a Golang script to initiate installation (and sync configurations #TODO) and an initial bootstrap script to make it even more simpler for the machine init.
-
-## Prerequisites
-```
-curl --version
-tar --version
-git --version
-```
 
 ## Install
 
