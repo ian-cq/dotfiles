@@ -18,6 +18,11 @@ jobs:
       - name: Install stow
         run: brew install stow
 
+      - name: Build Go
+        run: GOOS=darwin go build -o setup_quanianitis
+
+      - name: Test Go
+        run: go test -v ./...
 
       - name: Run setup_quanianitis
         run: |
