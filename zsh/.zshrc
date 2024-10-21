@@ -98,7 +98,8 @@ plugins=(
   # zsh-vi-mode
 )
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # User configuration
 
