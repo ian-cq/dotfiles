@@ -6,35 +6,52 @@ alias ...="z ../.."
 alias ....="z ../../.."
 alias .....="z ../../../.."
 alias cd="z" # `cd` is probably faster to type though
-alias cdroot="cd $(git rev-parse --show-toplevel)"
+# alias cdroot="zsh && cd $(git rev-parse --show-toplevel)"
+
+cdroot() {
+  cd "$(git rev-parse --show-toplevel)"
+}
 
 # FZF directory search
-alias find="fd"
+# alias find="fd"
 bindkey '^f' fzf-cd-widget
 bindkey '^p' fkill
 
 # Shortcuts
 alias dl="z ~/Downloads"
 alias dt="z ~/Desktop"
-alias p="z ~/projects"
+alias dc="z ~/Documents"
 
 # Always use color output for `ls`
 alias lsa="ls -la"
-alias cat="bat"
+alias cat="bat --theme base16"
 alias rng="ranger"
 alias du="dust"
 alias pomo="porsmo"
-alias tx="zellij"
+alias tx="zellij --layout ichan"
 alias diff="delta"
 alias :q="exit"
 alias tf="terraform"
 alias nv="nvim"
 alias vim="nvim"
+alias awk="gawk"
+
+# Alicloud
+alias ali="aliyun"
 
 # Kubernetes
 alias ktx="kubectx"
 alias kns="kubens"
 alias kubeoff="kubectx -u"
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
 # History searches
 bindkey '^k' history-search-backward
