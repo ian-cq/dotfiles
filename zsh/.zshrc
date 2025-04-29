@@ -95,10 +95,19 @@ plugins=(
   fzf-tab
   fzf
   zoxide
-  # zsh-vi-mode
+  docker
+  argocd
+  # zsh-aliyun
+  zsh-vi-mode
 )
 
 source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+export GPG_TTY=$(tty)
+
+autoload -U +X compinit && compinit -i
+autoload -U +X bashcompinit && bashcompinit -i
+complete -o nospace -F /opt/homebrew/bin/aliyun aliyun
+
 # ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # User configuration
@@ -113,6 +122,7 @@ if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
   export EDITOR='hx'
+  export BROWSER="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 fi
 
 # Compilation flags
@@ -149,3 +159,17 @@ done;#
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export SDKMAN_DIR=$(brew --prefix sdkman-cli)/libexec
+[[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]] && source "${SDKMAN_DIR}/bin/sdkman-init.sh"
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(direnv hook zsh)"
+source ~/.zsh-vi-mode.zsh
+zvm_bindkey vicmd '^F' fzf_cd_widget
+zvm_bindkey viins '\e\x7f' backward_delete_word
+zvm_bindkey viins '\e[1;3D' backward-word
+zvm_bindkey viins '\ef' forward-word
+zvm_bindkey viins '\\' self-insert

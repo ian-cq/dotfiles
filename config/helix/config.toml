@@ -1,4 +1,4 @@
-theme = "base16_default"
+theme = "ayu_dark_partial"
 
 [editor.soft-wrap]
 enable = true
@@ -10,6 +10,11 @@ auto-save = true
 completion-trigger-len = 1
 bufferline = "multiple"
 completion-replace = true
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line = "error"
+other-lines = "error"
 
 [editor.cursor-shape]
 insert = "bar"
@@ -74,10 +79,10 @@ space.w.tab = "goto_previous_buffer"
 space.w.w = ":buffer-close"
 space.c = "toggle_comments"
 space.w.o = "hsplit"
-space.w.c = "jump_view_left"
-space.w.r = "jump_view_right"
-space.w.t = "jump_view_down"
-space.w.s = "jump_view_up"
+space.left = "jump_view_left"
+space.right = "jump_view_right"
+# space.w.t = "jump_view_down"
+# space.w.s = "jump_view_up"
 space.n = ":new"
 space.x = ["yank_main_selection_to_clipboard", "delete_selection"]
 g.D = "goto_reference"
@@ -147,7 +152,7 @@ p = "replace_selections_with_clipboard" # No life without this
 P = "paste_clipboard_before"
 
 # Escape the madness! No more fighting with the cursor! Or with multiple cursors!
-esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
+esc = ["keep_primary_selection", "normal_mode"]
 
 [keys.insert]
 # Escape the madness! No more fighting with the cursor! Or with multiple cursors!
