@@ -1,84 +1,85 @@
 #!/bin/bash
+#
+# Bootstrap installer for ian-cq/dotfiles.
+#
+# Usage:
+#   zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
+#   ./install --version v1.2.3
+#
+set -euo pipefail
 
-set -eo pipefail
-
-# Declare initial variables
 repository_owner="ian-cq"
 repository_name="dotfiles"
-statistics=true
+version=""
 
-# Declare script behaviour
-if [[ "$1" == "--version" && -n "$2" ]]; then
-    version="$2"
-    echo "[INFO] Version provided: ${version}"
-elif [[ "$1" == "--ignore-statistics" || "$3" == "--ignore-statistics" ]]; then
-    statistics=false
-    echo "[INFO] Statistics collection disabled."
-else
-    echo -e "Usage: $0 --version <dotfiles_release_version>\nDefaulting to latest version..."
-    sleep 2
-    version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" \
-      | awk -F '"' '/"tag_name"/ {print $4}')
-    echo "[INFO] Latest version found: ${version}"
+# ---------------------------------------------------------------------------
+# Args
+# ---------------------------------------------------------------------------
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --version)
+      version="${2:-}"
+      [[ -z "$version" ]] && { echo "[ERROR] --version requires a value" >&2; exit 1; }
+      shift 2
+      ;;
+    -h|--help)
+      sed -n '2,9p' "$0"; exit 0
+      ;;
+    *)
+      echo "[WARN] Unknown argument: $1" >&2
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$version" ]]; then
+  echo "[INFO] No --version given; resolving latest release..."
+  version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" \
+            | awk -F '"' '/"tag_name"/ {print $4}')
+  [[ -z "$version" ]] && { echo "[ERROR] Could not resolve latest version" >&2; exit 1; }
+  echo "[INFO] Latest version: ${version}"
 fi
 
-# Declare script variables
-os=$(uname -s | awk '{print tolower($0)}')
-arch=$(uname -m | sed 's/x86_64/amd64/;s/arm64/arm64/;s/aarch64/arm64/')
+# ---------------------------------------------------------------------------
+# Detect platform
+# ---------------------------------------------------------------------------
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+arch=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 
 base_url="https://github.com/${repository_owner}/${repository_name}"
-binary_path="releases/download"
 binary="setup_quanianitis-${version}-${os}-${arch}.tar.gz"
-source_code_path="archive/refs/tags"
 source_code="${version}.tar.gz"
-  
-# Download binaries and repository source code
-echo "[INFO] Downloading binaries and source code for version ${version}..."
-curl -LO "${base_url}/${binary_path}/${version}/${binary}" \
-     -LO "${base_url}/${source_code_path}/${source_code}"
-git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
 
-tar -xzvf "${binary}"
-tar -xzvf "${source_code}"
+# ---------------------------------------------------------------------------
+# Download artefacts
+# ---------------------------------------------------------------------------
+echo "[INFO] Downloading binary and source for ${version}..."
+curl -fsSL -O "${base_url}/releases/download/${version}/${binary}"
+curl -fsSL -O "${base_url}/archive/refs/tags/${source_code}"
 
-# Rename and move files
-echo "[INFO] Copying dotfiles to home directory..."
-mkdir -p "$HOME/archives"
-mv "dotfiles-${version}" "${binary}" "${source_code}" "$HOME/archives"
-sudo mv ./setup_quanianitis /usr/local/bin
-
-# Run setup_quanianitis
-echo "[INFO] Running setup_quanianitis script..."
-cd $HOME/dotfiles && /usr/local/bin/setup_quanianitis
-
-# Publish statistics
-echo "[INFO] Collecting and publishing diagnostics data..."
-if [[ "$statistics" == "true" ]]; then
-    diagnostics_file="diagnostics.csv"
-
-    if [[ -z $GITHUB_TOKEN ]]; then
-        echo "[WARNING] GITHUB_TOKEN not set. Attempting to authenticate using gh CLI."
-        if ! gh auth status; then
-            gh auth login
-        fi
-        GITHUB_TOKEN=$(gh auth token)
-    fi
-    if [[ "$(uname -s)" == "Darwin" ]]; then
-        cpu_info=$(sysctl -n machdep.cpu.brand_string)
-        ip_address=$(ipconfig getifaddr en0)
-    else
-        cpu_info=$(lscpu | grep "Model name" | awk -F: '{print $2}')
-        ip_address=$(hostname -I | awk '{print $1}')
-    fi
-    git checkout main
-    git pull origin main
-    git remote set-url origin https://$GITHUB_TOKEN@github.com/${repository_owner}/${repository_name}.git
-    echo "$(hostname),$(whoami),$(uname -s),$cpu_info,$ip_address,$(git rev-parse HEAD),$(date +'%Y-%m-%d')" >> $diagnostics_file
-    git add $diagnostics_file
-    git -c user.email="bot@quanianitis.com" -c user.name="quanianitis.com" commit -m "$(date +'%Y-%m-%d') - New Host for quanianitis/dotfiles"
-    git -c user.email="bot@quanianitis.com" -c user.name="quanianitis.com"  push origin main
-
-    echo "[INFO] Statistics logged and published"
+if [[ -d "$HOME/dotfiles" ]]; then
+  echo "[INFO] $HOME/dotfiles already exists; skipping clone."
+else
+  git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
 fi
 
-echo "[INFO] Script completed successfully!"
+tar -xzf "${binary}"
+tar -xzf "${source_code}"
+
+# ---------------------------------------------------------------------------
+# Install
+# ---------------------------------------------------------------------------
+echo "[INFO] Archiving downloaded artefacts to ~/archives ..."
+mkdir -p "$HOME/archives"
+mv "dotfiles-${version#v}" "${binary}" "${source_code}" "$HOME/archives" 2>/dev/null || \
+  mv "dotfiles-${version}" "${binary}" "${source_code}" "$HOME/archives"
+
+install_dir="/usr/local/bin"
+[[ -d /opt/homebrew/bin ]] && install_dir="/opt/homebrew/bin"
+echo "[INFO] Installing setup_quanianitis to ${install_dir}..."
+sudo mv ./setup_quanianitis "${install_dir}/setup_quanianitis"
+
+echo "[INFO] Running setup_quanianitis..."
+cd "$HOME/dotfiles" && "${install_dir}/setup_quanianitis"
+
+echo "[INFO] Done!"

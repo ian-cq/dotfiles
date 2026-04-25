@@ -16,3 +16,6 @@ Thumbs.db
 .config/gcloud
 
 .cargo/registry
+
+# Telemetry artefact (no longer used; kept ignored to be safe)
+diagnostics.csv
