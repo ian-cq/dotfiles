@@ -10,10 +10,6 @@ import (
 	"strings"
 )
 
-const (
-	HOSTNAME = "Hannah Arendt"
-)
-
 func main() {
 	// Install Homebrew (state: present)
 	slog.Info("Ensuring Homebrew is installed...")
@@ -91,11 +87,6 @@ func main() {
 
 	slog.Info("Configuring System Preferences...")
 	if runtime.GOOS == "darwin" {
-		slog.Info("Updating Hostname...")
-		createExec("osascript -e 'tell application \"System Preferences\" to quit'")
-		createExec(fmt.Sprintf("sudo scutil --set ComputerName '%s'", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set HostName '%s'", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set LocalHostName '%s'", HOSTNAME))
 		// Appearance
 		slog.Info("Updating System Settings' Appearance")
 		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
@@ -130,8 +121,6 @@ func main() {
 		// Scrolling
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 	} else {
-		slog.Info("Updating Hostname...")
-		createExec(fmt.Sprintf("sudo hostnamectl set-hostname '%s'", HOSTNAME))
 		slog.Warn("System Preferences Configuration is only available for MacOS. Skipping...")
 	}
 

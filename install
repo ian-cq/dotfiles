@@ -3,7 +3,7 @@
 # Bootstrap installer for ian-cq/dotfiles.
 #
 # Usage:
-#   zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
+#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
 #   ./install --version v1.2.3
 #
 set -euo pipefail

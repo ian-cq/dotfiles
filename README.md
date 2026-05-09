@@ -9,7 +9,7 @@ Personal cross-platform (macOS / Linux) dotfiles. Symlinks are managed with **GN
 ## Quick install
 
 ```sh
-zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
 ```
 
 Or pin a release:
@@ -29,7 +29,7 @@ The bootstrap will:
    - Runs `brew bundle` against `homebrew/Brewfile`
    - Installs Oh My Zsh + the plugins listed in `zsh/.zshrc`
    - `stow`s every top-level directory into `$HOME`
-   - Applies macOS `defaults` and sets the hostname
+   - Applies macOS `defaults` (appearance, dock, trackpad)
 
 > **Note:** The previous "diagnostics" upload (hostname/IP/git-SHA pushed to a public CSV) has been removed. No telemetry is collected.
 
