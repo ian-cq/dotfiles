@@ -2,15 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
-
-	"github.com/bitfield/script"
 )
 
 const (
@@ -56,11 +53,7 @@ func main() {
 
 	// Cleanup Homebrew
 	slog.Info("Cleaning up Homebrew...")
-	brewCleanup, err := script.Exec("brew cleanup").String()
-	if err != nil {
-		log.Fatalf("Failed to cleanup Brew: %s", err)
-	}
-	slog.Info("Brew cleanup output", slog.String("output", brewCleanup))
+	createExec("brew cleanup")
 
 	// Install ZSH
 	zshPath, err := exec.LookPath("zsh")
@@ -149,9 +142,12 @@ func main() {
 }
 
 func createExec(command string) {
-	if _, err := script.Exec(command).Stdout(); err != nil {
+	cmd := exec.Command("/bin/bash", "-c", command)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
 		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
-		return
 	}
 }
 
@@ -209,8 +205,6 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	command := fmt.Sprintf("stow --adopt -d %s -t %s %s", sourceDir, targetDir, packageName)
 
 	slog.Info("Currently stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
-	if _, err := script.Exec(command).Stdout(); err != nil {
-		slog.Error("Command failed", slog.String("command", command), slog.Any("error", err))
-	}
+	createExec(command)
 	slog.Info("Successfully stowed package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 }
