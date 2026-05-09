@@ -22,7 +22,17 @@ func main() {
 	slog.Info("Ensuring Homebrew is installed...")
 	homebrewPath, err := exec.LookPath("brew")
 	if err != nil {
-		createExec("/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"")
+		cmd := exec.Command("/bin/bash", "-c", "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			slog.Error("Failed to install Homebrew", slog.Any("error", err))
+		}
+		// On Linux, Homebrew installs to /home/linuxbrew/.linuxbrew and is not on PATH by default
+		if runtime.GOOS == "linux" {
+			os.Setenv("PATH", "/home/linuxbrew/.linuxbrew/bin:"+os.Getenv("PATH"))
+		}
 	} else {
 		slog.Info("Homebrew already installed", slog.String("path", homebrewPath))
 	}

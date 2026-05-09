@@ -51,6 +51,14 @@ binary="setup_quanianitis-${version}-${os}-${arch}.tar.gz"
 source_code="${version}.tar.gz"
 
 # ---------------------------------------------------------------------------
+# Install prerequisites (Linux only)
+# ---------------------------------------------------------------------------
+if [[ "$os" == "linux" ]]; then
+  echo "[INFO] Installing prerequisites for Linux..."
+  sudo apt install -y build-essential procps curl file git
+fi
+
+# ---------------------------------------------------------------------------
 # Download artefacts
 # ---------------------------------------------------------------------------
 echo "[INFO] Downloading binary and source for ${version}..."
