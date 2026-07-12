@@ -3,4 +3,4 @@
 	url = https://github.com/catppuccin/alacritty.git
 [submodule "config/nvim"]
 	path = config/nvim
-	url = git@github.com:quanianitis/nvim.git
+	url = https://github.com/quanianitis/nvim.git

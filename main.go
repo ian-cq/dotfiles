@@ -8,55 +8,75 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 )
 
+const (
+	HOSTNAME = "Hannah Arendt"
+)
+
+// skipBrew reports whether Homebrew update/bundle steps should be skipped.
+// Skipped in CI (ACTIONS_WORKSPACE) and whenever SKIP_BREW is set, which lets
+// the installer be exercised quickly in a container to validate symlinks and
+// shell config without waiting on a full brew bundle.
+func skipBrew() bool {
+	if _, ok := os.LookupEnv("ACTIONS_WORKSPACE"); ok {
+		return true
+	}
+	if v, ok := os.LookupEnv("SKIP_BREW"); ok && v != "" && v != "0" && v != "false" {
+		return true
+	}
+	return false
+}
+
+// brewOnPath ensures the Homebrew bin dirs are on PATH for child processes,
+// covering Apple Silicon (/opt/homebrew), Intel macOS (/usr/local) and
+// Linuxbrew (/home/linuxbrew/.linuxbrew), which is NOT on PATH by default.
+func brewOnPath() {
+	for _, prefix := range []string{"/opt/homebrew", "/usr/local", "/home/linuxbrew/.linuxbrew"} {
+		bin := filepath.Join(prefix, "bin")
+		if _, err := os.Stat(filepath.Join(bin, "brew")); err == nil {
+			os.Setenv("PATH", bin+":"+filepath.Join(prefix, "sbin")+":"+os.Getenv("PATH"))
+			os.Setenv("HOMEBREW_PREFIX", prefix)
+			return
+		}
+	}
+}
+
 func main() {
-	// Install Homebrew (state: present)
-	slog.Info("Ensuring Homebrew is installed...")
-	homebrewPath, err := exec.LookPath("brew")
-	if err != nil {
-		cmd := exec.Command("/bin/bash", "-c", "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
-		cmd.Stdin = os.Stdin
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			slog.Error("Failed to install Homebrew", slog.Any("error", err))
+	// Homebrew is installed by scripts/prereqs.sh (run #1). We do NOT install it
+	// here — we only locate it and use it, so the two stages have one clear owner.
+	brewOnPath()
+
+	switch {
+	case skipBrew():
+		slog.Info("Skipping Homebrew steps (CI or SKIP_BREW set)")
+	default:
+		if _, err := exec.LookPath("brew"); err != nil {
+			slog.Warn("Homebrew not found on PATH — run scripts/prereqs.sh first; skipping brew bundle")
+		} else {
+			// Update and upgrade Homebrew
+			slog.Info("Updating and upgrading Homebrew...")
+			createExec("brew update")
+			createExec("brew upgrade")
+
+			// Install packages from Brewfile
+			homeDir := setHomeDir()
+			brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
+			slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
+			createExec("brew bundle -v --file=" + brewfilePath)
+
+			// Cleanup Homebrew
+			slog.Info("Cleaning up Homebrew...")
+			createExec("brew cleanup")
 		}
-		// On Linux, Homebrew installs to /home/linuxbrew/.linuxbrew and is not on PATH by default
-		if runtime.GOOS == "linux" {
-			os.Setenv("PATH", "/home/linuxbrew/.linuxbrew/bin:"+os.Getenv("PATH"))
-		}
-	} else {
-		slog.Info("Homebrew already installed", slog.String("path", homebrewPath))
 	}
 
-	// Skip brew upgrades and installs if in a CICD environment
-	ghaValue, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
-	if !ghaEnv {
-		// Update and upgrade Homebrew
-		slog.Info("Updating and upgrading Homebrew...")
-		createExec("brew update")
-		createExec("brew upgrade")
-
-		// Install packages from Brewfile
-		homeDir := setHomeDir()
-		brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
-		slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
-		createExec("brew bundle -v --file=" + brewfilePath)
+	// zsh is installed by prereqs.sh too; only warn if it is somehow missing.
+	if _, err := exec.LookPath("zsh"); err != nil {
+		slog.Warn("zsh not found on PATH — run scripts/prereqs.sh first")
 	} else {
-		slog.Info("Skipping... CI/CD Environment", slog.String("environment", ghaValue), slog.String("path", homebrewPath))
-	}
-
-	// Cleanup Homebrew
-	slog.Info("Cleaning up Homebrew...")
-	createExec("brew cleanup")
-
-	// Install ZSH
-	zshPath, err := exec.LookPath("zsh")
-	if err != nil {
-		createExec("brew install zsh")
-	} else {
-		slog.Info("Zsh already installed", slog.String("path", zshPath))
+		slog.Info("Zsh already installed")
 	}
 
 	// Install Oh My Zsh
@@ -72,21 +92,33 @@ func main() {
 	cloneGit("https://github.com/Aloxaf/fzf-tab", "~/.oh-my-zsh/custom/plugins/fzf-tab", 1)
 	cloneGit("https://github.com/jeffreytse/zsh-vi-mode", "~/.oh-my-zsh/custom/plugins/zsh-vi-mode", 1)
 
-	// Stow dotfiles
+	// Stow dotfiles (symlink every package into place)
 	slog.Info("Stowing dotfiles...")
 	stowDir("dotfiles/config", ".config/alacritty", "alacritty")
 	stowDir("dotfiles/config", ".config/helix", "helix")
+	stowDir("dotfiles/config", ".config/ghostty", "ghostty")
 	stowDir("dotfiles/config", ".config/gh", "gh")
 	stowDir("dotfiles/config", ".config/zellij", "zellij")
 	stowDir("dotfiles/config", ".config/nvim", "nvim")
 	stowDir("dotfiles", ".steampipe/config", "steampipe")
+	stowDir("dotfiles", ".ssh", "ssh")
 	stowDir("dotfiles", "", "zsh")
 	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 
+	// ~/.ssh must be private or ssh refuses to use it.
+	if home, err := os.UserHomeDir(); err == nil {
+		_ = os.Chmod(filepath.Join(home, ".ssh"), 0o700)
+	}
+
 	slog.Info("Configuring System Preferences...")
 	if runtime.GOOS == "darwin" {
+		slog.Info("Updating Hostname...")
+		createExec("osascript -e 'tell application \"System Settings\" to quit'")
+		createExec(fmt.Sprintf("sudo scutil --set ComputerName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set HostName '%s'", HOSTNAME))
+		createExec(fmt.Sprintf("sudo scutil --set LocalHostName '%s'", HOSTNAME))
 		// Appearance
 		slog.Info("Updating System Settings' Appearance")
 		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
@@ -120,14 +152,39 @@ func main() {
 
 		// Scrolling
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
-	} else {
-		slog.Warn("System Preferences Configuration is only available for MacOS. Skipping...")
+	} else if runtime.GOOS == "linux" {
+		if !skipBrew() {
+			slog.Info("Updating Hostname...")
+			createExec(fmt.Sprintf("sudo hostnamectl set-hostname '%s'", HOSTNAME))
+		}
+		slog.Warn("System Preferences configuration is macOS-only. Skipping...")
 	}
 
-	// Change user shell to zsh
-	slog.Info("Changing user shell to Zsh...")
-	createExec("zsh")
+	// Set login shell to zsh (do NOT exec an interactive zsh here — that would
+	// block the installer). Skipped in CI / SKIP_BREW runs.
+	setLoginShellZsh()
 	slog.Info("Completed setup_quanianitis")
+}
+
+// setLoginShellZsh changes the user's login shell to zsh via chsh, best-effort.
+func setLoginShellZsh() {
+	if skipBrew() {
+		slog.Info("Skipping login-shell change (CI or SKIP_BREW set)")
+		return
+	}
+	zshPath, err := exec.LookPath("zsh")
+	if err != nil {
+		slog.Warn("zsh not on PATH; skipping login-shell change")
+		return
+	}
+	if strings.HasSuffix(os.Getenv("SHELL"), "zsh") {
+		slog.Info("Login shell already zsh")
+		return
+	}
+	slog.Info("Changing login shell to zsh", slog.String("path", zshPath))
+	// Ensure zsh is a valid login shell, then chsh (best-effort).
+	createExec(fmt.Sprintf("grep -qxF '%s' /etc/shells || echo '%s' | sudo tee -a /etc/shells >/dev/null", zshPath, zshPath))
+	createExec(fmt.Sprintf("chsh -s '%s' || sudo chsh -s '%s' \"$USER\"", zshPath, zshPath))
 }
 
 func createExec(command string) {
@@ -141,13 +198,22 @@ func createExec(command string) {
 }
 
 func writeMacDefaults(macDomain string, macKey string, macValue string) {
-	var command string
-	command = fmt.Sprintf("defaults write %s %s %s", macDomain, macKey, macValue)
-
+	command := fmt.Sprintf("defaults write %s %s %s", macDomain, macKey, macValue)
 	createExec(command)
 }
 
 func cloneGit(repo string, dest string, depth int) {
+	// Skip if the destination already exists to keep the installer idempotent.
+	expanded := dest
+	if strings.HasPrefix(dest, "~/") {
+		if home, err := os.UserHomeDir(); err == nil {
+			expanded = filepath.Join(home, dest[2:])
+		}
+	}
+	if _, err := os.Stat(expanded); err == nil {
+		slog.Info("Repository already present; skipping clone", slog.String("destination", dest))
+		return
+	}
 	slog.Info("Cloning repository", slog.String("repo", repo), slog.String("destination", dest), slog.Int("depth", depth))
 	command := fmt.Sprintf("git clone %s %s --depth %d", repo, dest, depth)
 	createExec(command)
@@ -157,7 +223,7 @@ func setHomeDir() string {
 	// Expand $HOME environment variable
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		slog.Error("Error getting home directory", err)
+		slog.Error("Error getting home directory", slog.Any("error", err))
 	}
 
 	ghaValue, ghaEnv := os.LookupEnv("ACTIONS_WORKSPACE")
@@ -167,6 +233,39 @@ func setHomeDir() string {
 		homeDir = strings.TrimSuffix(homeDir, "/dotfiles")
 	}
 	return homeDir
+}
+
+// backupConflicts moves any pre-existing real files/dirs that stow would
+// collide with into ~/.dotfiles-backup-<timestamp>/, so the repo version wins
+// and stow never fails on a conflict. Existing correct symlinks are left alone.
+func backupConflicts(pkgDir string, targetDir string) {
+	entries, err := os.ReadDir(pkgDir)
+	if err != nil {
+		return
+	}
+	backupDir := ""
+	for _, e := range entries {
+		target := filepath.Join(targetDir, e.Name())
+		info, err := os.Lstat(target)
+		if err != nil {
+			continue // nothing there — no conflict
+		}
+		if info.Mode()&os.ModeSymlink != 0 {
+			continue // an existing symlink; stow --restow handles it
+		}
+		if backupDir == "" {
+			home, _ := os.UserHomeDir()
+			backupDir = filepath.Join(home, ".dotfiles-backup-"+time.Now().Format("20060102-150405"))
+			_ = os.MkdirAll(backupDir, 0o755)
+			slog.Warn("Backing up pre-existing files", slog.String("dir", backupDir))
+		}
+		dest := filepath.Join(backupDir, e.Name())
+		if err := os.Rename(target, dest); err != nil {
+			slog.Error("Failed to back up file", slog.String("path", target), slog.Any("error", err))
+		} else {
+			slog.Info("Backed up", slog.String("from", target), slog.String("to", dest))
+		}
+	}
 }
 
 func stowDir(sourceDir string, destDir string, packageName string) {
@@ -182,18 +281,19 @@ func stowDir(sourceDir string, destDir string, packageName string) {
 	}
 
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
-		slog.Warn("Currently creating directory, destination directory does not exist", slog.String("directory", targetDir))
-		err := exec.Command("mkdir", "-p", targetDir).Run()
-		if err != nil {
+		slog.Warn("Creating destination directory (does not exist)", slog.String("directory", targetDir))
+		if err := exec.Command("mkdir", "-p", targetDir).Run(); err != nil {
 			slog.Error("Failed to create destination directory", slog.String("directory", targetDir), slog.Any("error", err))
 			return
 		}
-		slog.Info("Successfully created destination directory", slog.String("directory", targetDir))
 	}
 
-	command := fmt.Sprintf("stow --adopt -d %s -t %s %s", sourceDir, targetDir, packageName)
+	// Move conflicting real files aside so stow can't fail (repo wins).
+	backupConflicts(filepath.Join(sourceDir, packageName), targetDir)
 
-	slog.Info("Currently stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
+	// --restow is idempotent: re-linking already-correct symlinks is a no-op.
+	command := fmt.Sprintf("stow --restow --no-folding -d %s -t %s %s", sourceDir, targetDir, packageName)
+
+	slog.Info("Stowing package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 	createExec(command)
-	slog.Info("Successfully stowed package", slog.String("package", packageName), slog.String("source", sourceDir), slog.String("target", targetDir))
 }
