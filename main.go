@@ -92,6 +92,14 @@ func main() {
 	cloneGit("https://github.com/Aloxaf/fzf-tab", "~/.oh-my-zsh/custom/plugins/fzf-tab", 1)
 	cloneGit("https://github.com/jeffreytse/zsh-vi-mode", "~/.oh-my-zsh/custom/plugins/zsh-vi-mode", 1)
 
+	// Ensure git submodules (nvim, alacritty theme) are checked out before
+	// stowing — a plain `git clone` (or a clone whose submodule fetch failed)
+	// leaves these dirs empty, so stow would link nothing. Idempotent.
+	slog.Info("Initializing git submodules...")
+	if homeDir := setHomeDir(); homeDir != "" {
+		createExec(fmt.Sprintf("git -C %s/dotfiles submodule update --init --recursive", homeDir))
+	}
+
 	// Stow dotfiles (symlink every package into place)
 	slog.Info("Stowing dotfiles...")
 	stowDir("dotfiles/config", ".config/alacritty", "alacritty")

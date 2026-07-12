@@ -8,8 +8,6 @@
 #   brew bundle --file=homebrew/Brewfile          # core (installed by setup)
 #   brew bundle --file=homebrew/Brewfile.casks    # optional GUI apps (macOS)
 
-tap "hashicorp/tap"
-tap "homebrew/bundle"
 tap "turbot/tap"
 
 # --- Shell & core plumbing --------------------------------------------------
@@ -53,9 +51,8 @@ brew "taplo"           # TOML LSP
 brew "terraform-ls"
 
 # --- Terraform --------------------------------------------------------------
-brew "tfenv"           # Terraform version manager
+brew "tfenv"           # Terraform version manager (installs terraform binaries)
 brew "terraform-docs"
-brew "hashicorp/tap/terraform", link: false  # tfenv manages the active binary
 
 # --- Kubernetes -------------------------------------------------------------
 brew "kubernetes-cli"  # kubectl
