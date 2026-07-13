@@ -1,16 +1,28 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Bootstrap installer for ian-cq/dotfiles.
+# Bootstrap installer for ian-cq/dotfiles (run #2 of 2).
+#
+# Run scripts/prereqs.sh FIRST — it installs the base toolchain (git, curl,
+# stow, zsh, a C toolchain and Homebrew). This script downloads the prebuilt
+# setup_quanianitis binary (or builds it from source if no release matches),
+# clones the repo and runs the installer, which creates every symlink and
+# installs the Brewfile.
 #
 # Usage:
-#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
-#   ./install --version v1.2.3
+#   ./scripts/prereqs.sh                # run #1: base deps + Homebrew
+#   ./install                           # run #2: download + run installer
+#   ./install --version v1.2.3          # pin a specific release
 #
 set -euo pipefail
 
 repository_owner="ian-cq"
 repository_name="dotfiles"
 version=""
+
+log()  { printf '[install] %s\n' "$*"; }
+warn() { printf '[install][WARN] %s\n' "$*" >&2; }
+die()  { printf '[install][ERROR] %s\n' "$*" >&2; exit 1; }
+have() { command -v "$1" >/dev/null 2>&1; }
 
 # ---------------------------------------------------------------------------
 # Args
@@ -19,25 +31,34 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --version)
       version="${2:-}"
-      [[ -z "$version" ]] && { echo "[ERROR] --version requires a value" >&2; exit 1; }
+      [[ -z "$version" ]] && die "--version requires a value"
       shift 2
       ;;
     -h|--help)
-      sed -n '2,9p' "$0"; exit 0
+      sed -n '2,13p' "$0"; exit 0
       ;;
     *)
-      echo "[WARN] Unknown argument: $1" >&2
+      warn "Unknown argument: $1"
       shift
       ;;
   esac
 done
 
-if [[ -z "$version" ]]; then
-  echo "[INFO] No --version given; resolving latest release..."
-  version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" \
-            | awk -F '"' '/"tag_name"/ {print $4}')
-  [[ -z "$version" ]] && { echo "[ERROR] Could not resolve latest version" >&2; exit 1; }
-  echo "[INFO] Latest version: ${version}"
+# ---------------------------------------------------------------------------
+# Prerequisite check — prereqs.sh must have run first
+# ---------------------------------------------------------------------------
+missing=()
+for tool in curl git stow; do
+  have "$tool" || missing+=("$tool")
+done
+if [[ ${#missing[@]} -gt 0 ]]; then
+  die "Missing prerequisites: ${missing[*]}. Run ./scripts/prereqs.sh first."
+fi
+
+# sudo only when needed and available.
+SUDO=""
+if [[ "${EUID:-$(id -u)}" -ne 0 ]] && have sudo; then
+  SUDO="sudo"
 fi
 
 # ---------------------------------------------------------------------------
@@ -47,47 +68,92 @@ os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 
 base_url="https://github.com/${repository_owner}/${repository_name}"
-binary="setup_quanianitis-${version}-${os}-${arch}.tar.gz"
-source_code="${version}.tar.gz"
 
 # ---------------------------------------------------------------------------
-# Install prerequisites (Linux only)
+# Resolve version (latest release unless pinned)
 # ---------------------------------------------------------------------------
-if [[ "$os" == "linux" ]]; then
-  echo "[INFO] Installing prerequisites for Linux..."
-  sudo apt install -y build-essential procps curl file git
+if [[ -z "$version" && -z "${FORCE_SOURCE_BUILD:-}" ]]; then
+  log "No --version given; resolving latest release…"
+  version=$(curl --silent "https://api.github.com/repos/${repository_owner}/${repository_name}/releases/latest" \
+            | awk -F '"' '/"tag_name"/ {print $4}')
+  if [[ -z "$version" ]]; then
+    warn "Could not resolve a latest release (none published yet?)."
+  else
+    log "Latest version: ${version}"
+  fi
 fi
 
 # ---------------------------------------------------------------------------
-# Download artefacts
+# Clone the repo (with submodules, best-effort) if not already present
 # ---------------------------------------------------------------------------
-echo "[INFO] Downloading binary and source for ${version}..."
-curl -fsSL -O "${base_url}/releases/download/${version}/${binary}"
-curl -fsSL -O "${base_url}/archive/refs/tags/${source_code}"
-
-if [[ -d "$HOME/dotfiles" ]]; then
-  echo "[INFO] $HOME/dotfiles already exists; skipping clone."
+if [[ -d "$HOME/dotfiles/.git" ]]; then
+  log "$HOME/dotfiles already exists; skipping clone."
 else
-  git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
+  log "Cloning repository to ~/dotfiles…"
+  if [[ -n "$version" ]]; then
+    git clone --branch "${version}" --recurse-submodules "${base_url}.git" "$HOME/dotfiles" \
+      || git clone --branch "${version}" "${base_url}.git" "$HOME/dotfiles"
+  else
+    git clone --recurse-submodules "${base_url}.git" "$HOME/dotfiles" \
+      || git clone "${base_url}.git" "$HOME/dotfiles"
+  fi
 fi
 
-tar -xzf "${binary}"
-tar -xzf "${source_code}"
+# ---------------------------------------------------------------------------
+# Obtain the setup_quanianitis binary.
+# Prefer a prebuilt release; fall back to building from source with `go`.
+# ---------------------------------------------------------------------------
+workdir="$(mktemp -d)"
+trap 'rm -rf "$workdir"' EXIT
+binary_path=""
+
+# FORCE_SOURCE_BUILD=1 skips the release download and builds from the local
+# working tree — used when testing local changes that aren't yet released.
+if [[ -n "${FORCE_SOURCE_BUILD:-}" && "${FORCE_SOURCE_BUILD}" != "0" ]]; then
+  version=""
+  log "FORCE_SOURCE_BUILD set — building from local source instead of a release."
+fi
+
+if [[ -n "$version" ]]; then
+  binary="setup_quanianitis-${version}-${os}-${arch}.tar.gz"
+  log "Downloading prebuilt binary ${binary}…"
+  if curl -fsSL -o "${workdir}/${binary}" "${base_url}/releases/download/${version}/${binary}"; then
+    tar -xzf "${workdir}/${binary}" -C "${workdir}"
+    [[ -f "${workdir}/setup_quanianitis" ]] && binary_path="${workdir}/setup_quanianitis"
+
+    # Keep a copy of the release artefact for reference.
+    mkdir -p "$HOME/archives"
+    cp "${workdir}/${binary}" "$HOME/archives/" 2>/dev/null || true
+  else
+    warn "Release binary not available for ${version}/${os}/${arch}."
+  fi
+fi
+
+if [[ -z "$binary_path" ]]; then
+  have go || die "No prebuilt binary and 'go' is not installed. Install Go (brew install go) or run scripts/prereqs.sh, then retry."
+  log "Building setup_quanianitis from source with go…"
+  ( cd "$HOME/dotfiles" && go build -o "${workdir}/setup_quanianitis" . )
+  binary_path="${workdir}/setup_quanianitis"
+fi
 
 # ---------------------------------------------------------------------------
-# Install
+# Install the binary onto PATH
 # ---------------------------------------------------------------------------
-echo "[INFO] Archiving downloaded artefacts to ~/archives ..."
-mkdir -p "$HOME/archives"
-mv "dotfiles-${version#v}" "${binary}" "${source_code}" "$HOME/archives" 2>/dev/null || \
-  mv "dotfiles-${version}" "${binary}" "${source_code}" "$HOME/archives"
-
 install_dir="/usr/local/bin"
-[[ -d /opt/homebrew/bin ]] && install_dir="/opt/homebrew/bin"
-echo "[INFO] Installing setup_quanianitis to ${install_dir}..."
-sudo mv ./setup_quanianitis "${install_dir}/setup_quanianitis"
+for candidate in /opt/homebrew/bin /home/linuxbrew/.linuxbrew/bin; do
+  [[ -d "$candidate" ]] && { install_dir="$candidate"; break; }
+done
+log "Installing setup_quanianitis to ${install_dir}…"
+if [[ -w "$install_dir" ]]; then
+  install -m 0755 "$binary_path" "${install_dir}/setup_quanianitis"
+else
+  $SUDO install -m 0755 "$binary_path" "${install_dir}/setup_quanianitis"
+fi
 
-echo "[INFO] Running setup_quanianitis..."
+# ---------------------------------------------------------------------------
+# Run the installer
+# ---------------------------------------------------------------------------
+log "Running setup_quanianitis…"
 cd "$HOME/dotfiles" && "${install_dir}/setup_quanianitis"
 
-echo "[INFO] Done!"
+log "Done! Open a new terminal (or run: exec zsh -l) to pick up your shell."

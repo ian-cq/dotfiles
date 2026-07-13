@@ -1,0 +1,28 @@
+# Brewfile.casks — OPTIONAL GUI applications (macOS only).
+#
+# These are NOT installed by the onboarding scripts. Install them explicitly:
+#
+#   brew bundle --file=homebrew/Brewfile.casks
+#
+# Kept intentionally minimal — the tools that pair with this shell setup.
+# Personal apps (browser, chat, music, notes, etc.) were removed; add back
+# whatever you actually want on a given machine.
+
+cask "ghostty"                    # primary terminal (config is stowed)
+cask "font-fira-code-nerd-font"   # font used by Ghostty + Helix icons
+cask "1password"                  # secrets manager
+cask "1password-cli"              # `op` CLI
+cask "orbstack"                   # lightweight Docker / Kubernetes runtime
+
+# --- Opt-in personal apps (uncomment as needed) -----------------------------
+# cask "google-chrome"
+# cask "rectangle"                # window management
+# cask "obsidian"
+# cask "zed"
+# cask "openlens"                 # Kubernetes GUI
+# cask "spotify"
+# cask "telegram"
+# cask "whatsapp"
+# cask "twingate"                 # zero-trust VPN client
+# cask "google-drive"
+# cask "foxit-reader"

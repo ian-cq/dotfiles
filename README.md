@@ -2,14 +2,20 @@
 
 <img width="1710" alt="screenshot" src="https://github.com/user-attachments/assets/0f039c1b-6e1c-49c1-8680-120f9f6422c8">
 
-Personal cross-platform (macOS / Linux) dotfiles. Symlinks are managed with **GNU Stow**, orchestrated by a **Go installer** (`setup_quanianitis`) and bootstrapped by a small **bash script** (`install`).
+Personal cross-platform (macOS / Linux) dotfiles. Symlinks are managed with **GNU Stow**, orchestrated by a **Go installer** (`setup_quanianitis`) and bootstrapped by small **bash scripts**.
 
 ---
 
-## Quick install
+## Quick install — two steps
+
+Onboarding a fresh machine is split into two idempotent runs:
 
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/refs/heads/main/install)"
+# 1. Fetch prerequisites: base packages + Homebrew (needs sudo on Linux)
+./scripts/prereqs.sh
+
+# 2. Download/build setup_quanianitis, create every symlink, install the Brewfile
+./install
 ```
 
 Or pin a release:
@@ -18,20 +24,87 @@ Or pin a release:
 ./install --version v1.2.3
 ```
 
-The bootstrap will:
+**Run 1 — `scripts/prereqs.sh`** installs the minimal toolchain the installer
+needs and nothing more:
 
-1. Resolve the latest release tag (or use `--version`).
-2. Download the prebuilt `setup_quanianitis` binary + the source tarball from GitHub.
-3. Clone the repo to `~/dotfiles` (skipped if it already exists).
-4. Move artefacts to `~/archives/` and install the binary to `/opt/homebrew/bin` (Apple Silicon) or `/usr/local/bin`.
-5. Run `setup_quanianitis` from `~/dotfiles`, which:
-   - Installs Homebrew if missing
-   - Runs `brew bundle` against `homebrew/Brewfile`
+- OS base packages via `apt-get`/`dnf`/`pacman` (with an `apt-get update` first,
+  so it works on a bare image): `build-essential`, `git`, `curl`, `file`,
+  `stow`, `zsh`.
+- Homebrew (if missing) and puts it on `PATH`.
+
+**Run 2 — `install`** then:
+
+1. Resolves the latest release tag (or uses `--version`).
+2. Downloads the prebuilt `setup_quanianitis` binary — or, if no matching
+   release exists, builds it from source with `go`.
+3. Clones the repo to `~/dotfiles` with submodules (skipped if it already exists).
+4. Installs the binary to the first writable Homebrew / `/usr/local` bin dir.
+5. Runs `setup_quanianitis` from `~/dotfiles`, which:
+   - Runs `brew bundle` against `homebrew/Brewfile` using the Homebrew that
+     `prereqs.sh` installed (GUI casks are **not** installed — see
+     `homebrew/Brewfile.casks`)
    - Installs Oh My Zsh + the plugins listed in `zsh/.zshrc`
-   - `stow`s every top-level directory into `$HOME`
-   - Applies macOS `defaults` (appearance, dock, trackpad)
+   - `stow`s every package into place, backing up any pre-existing real files
+     to `~/.dotfiles-backup-<timestamp>/` so the repo always wins
+   - Sets the login shell to zsh via `chsh`, and on macOS applies `defaults`
+     (appearance, dock, trackpad) and the hostname
 
-> **Note:** The previous "diagnostics" upload (hostname/IP/git-SHA pushed to a public CSV) has been removed. No telemetry is collected.
+> **Testing:** `test/run.sh` builds a clean Ubuntu container and runs both steps
+> end-to-end with `SKIP_BREW=1`, asserting every symlink is created and the zsh
+> config loads. See [Testing onboarding](#testing-onboarding).
+
+> **Note:** The previous "diagnostics" upload (hostname/IP/git-SHA pushed to a
+> public CSV) has been removed. No telemetry is collected.
+
+---
+
+## Architecture — how onboarding works
+
+Onboarding is split across **three components** with deliberately separate
+responsibilities. This is the mental model to keep when editing them:
+
+```
+  scripts/prereqs.sh      install (bash)              setup_quanianitis (main.go)
+  ─────────────────       ────────────────           ───────────────────────────
+  system bootstrap   ─▶   acquire + place binary ─▶  configure the machine
+  (run #1, once)          (run #2)                    (invoked by install)
+```
+
+| Component | Language | Responsibility | Boundary |
+| --------- | -------- | -------------- | -------- |
+| `scripts/prereqs.sh` | bash | Install the base toolchain the rest of the process needs: a C toolchain, `git`, `curl`, `file`, `stow`, `zsh` (via apt/dnf/pacman, `apt-get update` first) **and Homebrew**. | Only system-level prerequisites. Does **not** touch dotfiles or symlinks. |
+| `install` | bash | Resolve the release, **download the prebuilt `setup_quanianitis` binary** (or `go build` it if no release matches), clone `~/dotfiles` (with submodules), install the binary onto `PATH`, then run it. | The "delivery" layer. It refuses to run and points you back to `prereqs.sh` if `curl`/`git`/`stow` are missing. |
+| `setup_quanianitis` (`main.go`) | Go | The actual configuration: `brew bundle` the `Brewfile`, install Oh My Zsh + plugins, **`stow` every package into place**, set macOS `defaults`/hostname, and `chsh` the login shell to zsh. | Everything that shapes `$HOME`. Idempotent; safe to re-run on its own. |
+
+**Why the split:** `prereqs.sh` was carved out of the old `install` so a bare
+machine can be brought up predictably (the old script assumed `git`/`stow`/a
+compiler already existed and ran `apt install` with no `apt-get update`). Keeping
+system bootstrap separate from dotfile configuration means each half can be run,
+tested, and reasoned about independently.
+
+### When do I run each?
+
+- **`scripts/prereqs.sh`** — **once, first, on a brand-new machine** (or after
+  nuking Homebrew). It's the only step that needs `sudo`.
+- **`install`** — right after `prereqs.sh` on a fresh machine, and any time you
+  want to re-onboard from scratch (re-download the binary, re-clone, re-run).
+- **`setup_quanianitis`** (the binary, directly) — for day-to-day updates on an
+  already-onboarded machine: re-stow after adding a config, re-run `brew bundle`
+  after editing the `Brewfile`. No need to go through `install` again.
+
+> Homebrew has exactly one owner: **`prereqs.sh`** installs it. `setup_quanianitis`
+> only *uses* it — if `brew` isn't on `PATH` it logs a warning and skips
+> `brew bundle` rather than installing Homebrew itself. So on a fresh box you must
+> run `prereqs.sh` before `install`, and re-running `install` never re-installs
+> Homebrew.
+
+### Environment variables (knobs used by the scripts & tests)
+
+| Variable | Effect |
+| -------- | ------ |
+| `SKIP_BREW=1` | `prereqs.sh` and `main.go` skip all Homebrew work (install/update/`brew bundle`). Used to validate symlinks + shell config fast, without a package manager. |
+| `FORCE_SOURCE_BUILD=1` | `install` skips the release download and `go build`s the binary from the local working tree — how you test un-released local changes. |
+| `ACTIONS_WORKSPACE` | Set in CI; treated like `SKIP_BREW` and used to locate the checked-out repo. |
 
 ---
 
@@ -39,25 +112,35 @@ The bootstrap will:
 
 ```
 dotfiles/
-├── install              # Bash bootstrap (entry-point for new machines)
-├── main.go              # Go installer source for setup_quanianitis
-├── aliases/.aliases     # Shell aliases & small functions
-├── ansible/             # (Optional) Ansible playbooks for osx/ubuntu
-├── config/              # XDG_CONFIG_HOME contents (~/.config/*)
-│   ├── alacritty/       # Submodule: catppuccin theme
-│   ├── ghostty/
+├── install                   # Run #2: download/build + run the installer
+├── scripts/
+│   └── prereqs.sh            # Run #1: base packages + Homebrew (standalone)
+├── main.go                   # Go installer source for setup_quanianitis
+├── test/                     # Containerised onboarding smoke test
+│   ├── Dockerfile            # Clean ubuntu:24.04 "fresh machine"
+│   ├── run.sh                # Build image + run onboarding + verify
+│   └── onboard-and-verify.sh # The in-container two-step run + assertions
+├── aliases/.aliases          # Shell aliases & small functions
+├── ansible/                  # (Optional) Ansible playbooks for osx/ubuntu
+├── config/                   # XDG_CONFIG_HOME contents (~/.config/*)
+│   ├── alacritty/            # Submodule: catppuccin theme
+│   ├── ghostty/              # Ghostty terminal config
 │   ├── gh/
 │   ├── helix/
-│   ├── nvim/            # Submodule: kickstart.nvim fork
+│   ├── nvim/                 # Submodule: kickstart.nvim fork
 │   └── zellij/
 ├── git/.gitconfig
-├── homebrew/Brewfile    # All brew/cask/tap dependencies
+├── homebrew/
+│   ├── Brewfile              # Lean core CLI toolchain (installed by setup)
+│   └── Brewfile.casks        # Optional GUI apps (macOS) — opt-in
 ├── ssh/config
-├── steampipe/           # Steampipe connection configs
-└── zsh/                 # .zshrc, .p10k.zsh, .fzf.zsh, etc.
+├── steampipe/                # Steampipe connection configs
+└── zsh/                      # .zshrc, .p10k.zsh, .fzf.zsh, etc.
 ```
 
-Each top-level directory is a **stow package** — running `stow <dir>` from the repo root creates symlinks in `$HOME` mirroring its layout (e.g. `zsh/.zshrc` → `~/.zshrc`).
+Each package is stowed into place by the installer — `ssh` → `~/.ssh`, `config/*`
+→ `~/.config/*`, and `zsh`/`aliases`/`git`/`homebrew` → `$HOME` (e.g.
+`zsh/.zshrc` → `~/.zshrc`).
 
 ---
 
@@ -73,6 +156,9 @@ cd ~/dotfiles
 stow zsh aliases git ssh
 stow -t ~/.config config        # XDG configs go under ~/.config
 stow homebrew && brew bundle --file=homebrew/Brewfile
+
+# Optional GUI apps (macOS):
+brew bundle --file=homebrew/Brewfile.casks
 ```
 
 Unstow (remove symlinks) with:
@@ -81,11 +167,26 @@ Unstow (remove symlinks) with:
 stow -D <package>
 ```
 
-Adopt existing files in `$HOME` into the repo (use with care):
+The installer never uses `stow --adopt` (which would let a machine's stray files
+overwrite the repo). Instead it moves any conflicting real files to
+`~/.dotfiles-backup-<timestamp>/` and then stows, so the repo version wins.
+
+---
+
+## Testing onboarding
+
+`test/run.sh` proves that a clean Linux box can be onboarded in the two documented
+steps, without publishing a release or installing every package:
 
 ```sh
-stow --adopt <package>
+test/run.sh          # build ubuntu:24.04 image, run both steps, verify
+test/run.sh shell    # drop into a shell in the test container
 ```
+
+It runs with `SKIP_BREW=1` (skip Homebrew/`brew bundle`) and `FORCE_SOURCE_BUILD=1`
+(build `setup_quanianitis` from the working tree instead of a release), then
+asserts every symlink resolves back into `~/dotfiles`, `~/.ssh` is `0700`, the
+Oh My Zsh plugins are present, and `~/.zshrc` parses and sources cleanly.
 
 ---
 
@@ -96,12 +197,16 @@ stow --adopt <package>
 | **Shell**         | zsh + Oh My Zsh, theme `cloud`, `zsh-vi-mode`, fzf-tab, syntax highlighting    |
 | **Prompt extras** | `kube-ps1` for kubectl context (toggle with `kube-toggle`)                     |
 | **Editor**        | Helix primary (`hx`), nvim (kickstart fork) for migration                      |
-| **Multiplexer**   | zellij (layouts in `config/zellij/layouts/`), tmux as fallback                 |
-| **Terminal**      | Alacritty + Ghostty configs                                                    |
+| **Multiplexer**   | zellij (layouts in `config/zellij/layouts/`)                                   |
+| **Terminal**      | Ghostty (primary) + Alacritty configs                                          |
 | **Search**        | `fd` + `rg` + `fzf` (`Ctrl-F` cd widget, `Ctrl-P` fkill, `Ctrl-K/J` history)   |
 | **Git**           | `delta` for diffs, `gh` credential helper, signed commits                      |
-| **Cloud / k8s**   | aws-cli, aliyun-cli, kubectl + kubectx/kubens/kustomize/krew, helm, argocd     |
-| **Languages**     | pyenv (lazy-loaded), nvm, rust, go, openjdk                                    |
+| **Cloud / k8s**   | aws-cli, kubectl + kubectx/kubens/kustomize/krew, helm, kubeconform, argocd    |
+| **Terraform**     | tfenv + terraform, terraform-ls, terraform-docs                                |
+| **Languages**     | pyenv (lazy-loaded), go, python                                                |
+
+> GUI apps (Ghostty, 1Password, OrbStack, …) live in `homebrew/Brewfile.casks`
+> and are **not** installed automatically — run `brew bundle --file=homebrew/Brewfile.casks`.
 
 ---
 
@@ -154,9 +259,11 @@ zsh -i -c 'zmodload zsh/zprof && exit; zprof' | head -30
 
 ## Limitations
 
-- Most macOS-specific aliases (`flush`, `lscleanup`, `airport`-like, `defaults`) are no-ops on Linux.
-- The `install` script assumes Homebrew on macOS / Linuxbrew. Pure-Linux package managers aren't supported by the Go installer (use the `ansible/` playbooks for that path).
-- Submodules (`config/nvim`, `config/alacritty/catppuccin`) require `git clone --recurse-submodules`.
+- Most macOS-specific aliases (`flush`, `lscleanup`, `defaults`) are no-ops on Linux.
+- `scripts/prereqs.sh` handles apt/dnf/pacman for base packages, but the
+  `brew bundle` step still relies on Homebrew/Linuxbrew for the CLI tools.
+- Submodules (`config/nvim`, `config/alacritty/catppuccin`) are cloned via
+  HTTPS; `install` fetches them with `--recurse-submodules` (best-effort).
 
 ---
 

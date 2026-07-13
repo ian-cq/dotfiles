@@ -6,12 +6,23 @@
 # ---------------------------------------------------------------------------
 typeset -U path PATH                                  # de-duplicate entries
 path=(
-  /opt/homebrew/bin
+  /opt/homebrew/bin                                   # Homebrew (Apple Silicon)
   /opt/homebrew/sbin
+  /home/linuxbrew/.linuxbrew/bin                      # Homebrew (Linux)
+  /home/linuxbrew/.linuxbrew/sbin
+  /usr/local/bin                                      # Homebrew (Intel macOS)
   $HOME/.cargo/bin
   $HOME/go/bin
+  $HOME/.krew/bin                                     # kubectl krew plugins
   $path
 )
+# Non-existent entries above are harmless; typeset -U keeps PATH de-duplicated.
+
+# Load full Homebrew environment (HOMEBREW_PREFIX, MANPATH, etc.) if present.
+for _brew in /opt/homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin/brew /usr/local/bin/brew; do
+  [[ -x $_brew ]] && { eval "$("$_brew" shellenv)"; break; }
+done
+unset _brew
 
 # ---------------------------------------------------------------------------
 # Oh My Zsh
@@ -60,7 +71,9 @@ if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
   export EDITOR='hx'
-  export BROWSER='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  # macOS-only browser hint; harmless when the app/path is absent.
+  [[ "$OSTYPE" == darwin* ]] && \
+    export BROWSER='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 fi
 
 # Add zsh-completions to fpath BEFORE compinit
@@ -73,7 +86,7 @@ fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 # ---------------------------------------------------------------------------
 source $ZSH/oh-my-zsh.sh
 autoload -U +X bashcompinit && bashcompinit -i
-[[ -x /opt/homebrew/bin/aliyun ]] && complete -o nospace -F /opt/homebrew/bin/aliyun aliyun
+command -v aliyun >/dev/null && complete -o nospace -F "$(command -v aliyun)" aliyun
 
 # ---------------------------------------------------------------------------
 # Per-tool integrations
