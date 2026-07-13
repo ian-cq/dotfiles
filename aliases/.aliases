@@ -26,9 +26,7 @@ alias dc="z ~/Documents"
 # ---------------------------------------------------------------------------
 alias lsa="ls -la"
 alias cat="bat --theme base16"
-alias rng="ranger"
 alias du="dust"
-alias pomo="porsmo"
 alias tx="zellij --layout ichan"
 alias diff="delta"
 alias :q="exit"
@@ -110,10 +108,6 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 
 # URL-encode (python3)
 alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))"'
-
-# Merge PDFs (requires ghostscript)
-# Usage: mergepdf input{1,2,3}.pdf
-alias mergepdf='gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=_merged.pdf'
 
 # Spotlight
 alias spotoff="sudo mdutil -a -i off"

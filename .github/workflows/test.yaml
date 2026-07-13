@@ -1,48 +1,47 @@
-# .github/workflows/main.yaml
-name: MacOS Build setup_quanianitis
+# .github/workflows/test.yaml
+# Runs the real two-step onboarding (prereqs -> install -> verify) on a clean
+# macOS runner and a clean Ubuntu runner. This is how the macOS path gets tested
+# — macOS cannot be containerised, so we use GitHub's macOS VMs.
+name: Onboarding (macOS + Ubuntu)
 
 on:
   push:
-    branches:
-      - staging
+    branches: [staging]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  setup-quanianitis:
+  onboard:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
-      - name: Set up Homebrew
-        if: matrix.os == 'ubuntu-latest'
-        uses: Homebrew/actions/setup-homebrew@master
+      # `install` looks for the repo at ~/dotfiles; point it at this checkout so
+      # it builds the PR code (FORCE_SOURCE_BUILD) instead of cloning main.
+      - name: Link checkout to ~/dotfiles
+        run: |
+          [ -e "$HOME/dotfiles" ] || ln -s "$GITHUB_WORKSPACE" "$HOME/dotfiles"
 
-      - name: Install stow
+      # On macOS, prereqs.sh skips Homebrew under SKIP_BREW, so install stow here.
+      - name: Install stow (macOS)
+        if: matrix.os == 'macos-latest'
         run: brew install stow
 
-      - name: Build Go
-        run: GOOS=${{ matrix.os == 'macos-latest' && 'darwin' || 'linux' }} go build -o setup_quanianitis
+      - name: Vet
+        run: go vet ./...
 
-      - name: Test Go
-        run: go test -v ./...
-
-      - name: Run setup_quanianitis
-        run: |
-          ./setup_quanianitis
+      # SKIP_BREW  -> validate symlinks/shell without a full brew bundle
+      # FORCE_SOURCE_BUILD -> build setup_quanianitis from this checkout
+      - name: Onboard + verify
+        run: cd "$HOME/dotfiles" && bash test/onboard-and-verify.sh
         env:
-          ENABLE_CICD: "true"
-          ACTIONS_WORKSPACE: ${{ github.workspace }}
-
-      - name: Post-Installation Verification
-        run: |
-          trimmed_workspace=$(echo "${{ github.workspace }}" | sed 's/\/dotfiles\/dotfiles/\/dotfiles/')
-          cat $trimmed_workspace/.config/alacritty/* || true
-          cat $trimmed_workspace/.config/helix/* || true
-          cat $trimmed_workspace/.zshrc || true
-          ls $trimmed_workspace/.config || true
-
+          SKIP_BREW: "1"
+          FORCE_SOURCE_BUILD: "1"
