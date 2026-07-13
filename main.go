@@ -11,10 +11,6 @@ import (
 	"time"
 )
 
-const (
-	HOSTNAME = "Hannah Arendt"
-)
-
 // skipBrew reports whether Homebrew update/bundle steps should be skipped.
 // Skipped in CI (ACTIONS_WORKSPACE) and whenever SKIP_BREW is set, which lets
 // the installer be exercised quickly in a container to validate symlinks and
@@ -60,11 +56,14 @@ func main() {
 			createExec("brew update")
 			createExec("brew upgrade")
 
-			// Install packages from Brewfile
-			homeDir := setHomeDir()
-			brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
-			slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
-			createExec("brew bundle -v --file=" + brewfilePath)
+		// Install packages from Brewfile
+		homeDir := setHomeDir()
+		brewfilePath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile")
+		brewfileCasksPath := filepath.Join(homeDir, "dotfiles", "homebrew", "Brewfile.casks")
+		slog.Info("Installing packages from Brewfile...", slog.String("Brewpath", brewfilePath))
+		createExec("brew bundle -v --file=" + brewfilePath)
+		slog.Info("Installing casks from Brewfile.casks...", slog.String("Brewpath", brewfileCasksPath))
+		createExec("brew bundle -v --file=" + brewfileCasksPath)
 
 			// Cleanup Homebrew
 			slog.Info("Cleaning up Homebrew...")
@@ -141,11 +140,7 @@ func main() {
 
 	slog.Info("Configuring System Preferences...")
 	if runtime.GOOS == "darwin" {
-		slog.Info("Updating Hostname...")
 		createExec("osascript -e 'tell application \"System Settings\" to quit'")
-		createExec(fmt.Sprintf("sudo scutil --set ComputerName '%s'", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set HostName '%s'", HOSTNAME))
-		createExec(fmt.Sprintf("sudo scutil --set LocalHostName '%s'", HOSTNAME))
 		// Appearance
 		slog.Info("Updating System Settings' Appearance")
 		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
@@ -167,6 +162,7 @@ func main() {
 
 		// Trackpad, mouse, keyboard, Bluetooth accessories, and input
 		slog.Info("Updating System Settings' Trackpad")
+		writeMacDefaults("NSGlobalDomain", "com.apple.swipescrolldirection", "-bool true")
 		writeMacDefaults("com.apple.AppleMultitouchTrackpad", "Clicking", "-bool true")
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
@@ -187,8 +183,6 @@ func main() {
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 	} else if runtime.GOOS == "linux" {
 		if !skipBrew() {
-			slog.Info("Updating Hostname...")
-			createExec(fmt.Sprintf("sudo hostnamectl set-hostname '%s'", HOSTNAME))
 		}
 		slog.Warn("System Preferences configuration is macOS-only. Skipping...")
 	}
