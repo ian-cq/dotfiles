@@ -110,6 +110,12 @@ func main() {
 	stowDir("dotfiles/config", ".config/nvim", "nvim")
 	stowDir("dotfiles", ".steampipe/config", "steampipe")
 	stowDir("dotfiles", ".ssh", "ssh")
+	// gnupg: only the *public* config files (gpg-agent.conf) are stowed.
+	// Private keys / keyring stay untouched in ~/.gnupg. macOS-only for now
+	// because gpg-agent.conf points at pinentry-mac.
+	if runtime.GOOS == "darwin" {
+		stowDir("dotfiles/config", ".gnupg", "gnupg")
+	}
 	stowDir("dotfiles", "", "zsh")
 	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
@@ -125,6 +131,12 @@ func main() {
 	// ~/.ssh must be private or ssh refuses to use it.
 	if home, err := os.UserHomeDir(); err == nil {
 		_ = os.Chmod(filepath.Join(home, ".ssh"), 0o700)
+		// Same for ~/.gnupg (gpg refuses to run otherwise) and reload the
+		// agent so a freshly-stowed gpg-agent.conf takes effect immediately.
+		if runtime.GOOS == "darwin" {
+			_ = os.Chmod(filepath.Join(home, ".gnupg"), 0o700)
+			createExec("gpgconf --kill gpg-agent")
+		}
 	}
 
 	slog.Info("Configuring System Preferences...")

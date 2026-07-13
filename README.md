@@ -137,6 +137,7 @@ dotfiles/
 │   ├── alacritty/            # Submodule: catppuccin theme
 │   ├── ghostty/              # Ghostty terminal config
 │   ├── gh/
+│   ├── gnupg/                # gpg-agent.conf (public config; keys not tracked)
 │   ├── helix/
 │   ├── nvim/                 # Submodule: kickstart.nvim fork
 │   └── zellij/

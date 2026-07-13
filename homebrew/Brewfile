@@ -20,7 +20,8 @@ brew "moreutils"
 brew "direnv"
 brew "zoxide"          # `z` / cd replacement
 brew "gnupg"           # signed commits
-brew "pinentry"
+brew "pinentry"                             # generic (Linux fallback)
+brew "pinentry-mac" if OS.mac?              # native macOS GUI + Keychain integration
 brew "openssh"
 brew "wget"
 brew "tree"
