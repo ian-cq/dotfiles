@@ -25,10 +25,11 @@ for p in /opt/homebrew /home/linuxbrew/.linuxbrew /usr/local; do
 done
 
 # On macOS the Darwin branch above only ran xcode-select; stow/zsh come from
-# Homebrew. On Linux they came from apt/dnf/pacman, so these are no-ops.
-if [[ "${SKIP_BREW:-0}" != "1" ]] && command -v brew >/dev/null; then
-  command -v stow >/dev/null || brew install stow
-  command -v zsh  >/dev/null || brew install zsh
+# Homebrew. On Linux they came from apt/dnf/pacman above, so the `--quiet`
+# reinstall is a fast no-op there (idempotent).
+if [[ "${SKIP_BREW:-0}" != "1" ]] && command -v brew >/dev/null && [[ "$(uname -s)" == "Darwin" ]]; then
+  brew list stow >/dev/null 2>&1 || brew install stow
+  brew list zsh  >/dev/null 2>&1 || brew install zsh
 fi
 
 echo "[prereqs] done — next: ./install (or curl the one-liner in README)"
