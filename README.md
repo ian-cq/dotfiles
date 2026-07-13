@@ -60,9 +60,10 @@ then:
    - Sets the login shell to zsh via `chsh`, and on macOS applies `defaults`
      (appearance, dock, trackpad) and the hostname
 
-> **Testing:** `test/run.sh` builds a clean Ubuntu container and runs both steps
-> end-to-end with `SKIP_BREW=1`, asserting every symlink is created and the zsh
-> config loads. See [Testing onboarding](#testing-onboarding).
+> **Testing:** the `CI` workflow in `.github/workflows/main.yaml` runs the same
+> two `curl | bash` steps on `ubuntu-latest` and `macos-latest` on every PR and
+> asserts every symlink is created and zsh loads. `scripts/run.sh` reproduces
+> the Ubuntu leg locally in a container. See [Testing onboarding](#testing-onboarding).
 
 > **Note:** The previous "diagnostics" upload (hostname/IP/git-SHA pushed to a
 > public CSV) has been removed. No telemetry is collected.
@@ -125,12 +126,10 @@ tested, and reasoned about independently.
 dotfiles/
 ├── install                   # Run #2: download/build + run the installer
 ├── scripts/
-│   └── prereqs.sh            # Run #1: base packages + Homebrew (standalone)
+│   ├── prereqs.sh            # Run #1: base packages + Homebrew (standalone)
+│   ├── Dockerfile            # Clean ubuntu:24.04 for local onboarding tests
+│   └── run.sh                # Build image + run onboarding (local convenience)
 ├── main.go                   # Go installer source for setup_quanianitis
-├── test/                     # Containerised onboarding smoke test
-│   ├── Dockerfile            # Clean ubuntu:24.04 "fresh machine"
-│   ├── run.sh                # Build image + run onboarding + verify
-│   └── onboard-and-verify.sh # The in-container two-step run + assertions
 ├── aliases/.aliases          # Shell aliases & small functions
 ├── ansible/                  # (Optional) Ansible playbooks for osx/ubuntu
 ├── config/                   # XDG_CONFIG_HOME contents (~/.config/*)
@@ -189,18 +188,23 @@ overwrite the repo). Instead it moves any conflicting real files to
 
 ## Testing onboarding
 
-`test/run.sh` proves that a clean Linux box can be onboarded in the two documented
-steps, without publishing a release or installing every package:
+The authoritative onboarding test is [`.github/workflows/main.yaml`](.github/workflows/main.yaml),
+which runs on every push / PR against both `ubuntu-latest` and `macos-latest`.
+It mirrors the README copy-paste flow exactly: `curl … prereqs.sh | bash`, then
+`curl … install | bash`, then a set of inline assertions (symlinks resolve into
+`~/dotfiles`, `~/.ssh` is `0700`, Oh My Zsh + plugins present, `~/.zshrc` parses
+and sources cleanly). Ubuntu runs with `SKIP_BREW=1` for speed; macOS runs the
+full Homebrew path.
+
+For local iteration on `prereqs.sh` / `install` without pushing to CI:
 
 ```sh
-test/run.sh          # build ubuntu:24.04 image, run both steps, verify
-test/run.sh shell    # drop into a shell in the test container
+scripts/run.sh          # build ubuntu:24.04 image + run onboarding in a container
+scripts/run.sh shell    # drop into a shell in the container
 ```
 
-It runs with `SKIP_BREW=1` (skip Homebrew/`brew bundle`) and `FORCE_SOURCE_BUILD=1`
-(build `setup_quanianitis` from the working tree instead of a release), then
-asserts every symlink resolves back into `~/dotfiles`, `~/.ssh` is `0700`, the
-Oh My Zsh plugins are present, and `~/.zshrc` parses and sources cleanly.
+Auto-detects `nerdctl` / `podman` / `docker`. Runs with `SKIP_BREW=1` and
+`FORCE_SOURCE_BUILD=1` so it stays fast (~2 min) and hermetic.
 
 ---
 

@@ -1,39 +1,152 @@
 # .github/workflows/main.yaml
-name: Full MacOS dotfiles setup_quanianitis
+# Single CI workflow: exercises the README copy-paste onboarding flow on
+# a clean Ubuntu and a clean macOS runner.
+#
+# The flow deliberately mirrors what a human would do from a bare machine
+# following README.md:
+#   1. install curl (bare Debian doesn't always have it)
+#   2. copy-paste scripts/prereqs.sh from raw.githubusercontent.com and pipe to bash
+#   3. copy-paste the install one-liner from raw.githubusercontent.com and pipe to bash
+#   4. verify the resulting home directory
+#
+# Ubuntu runs with SKIP_BREW=1 (fast, ~2min, still exercises stow + zsh + install).
+# macOS runs the full path INCLUDING Homebrew, since that's the primary target.
+name: CI
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
-    types:
-      - closed
-    branches:
-      - main
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  setup-quanianitis:
-    runs-on: macos-latest
-    if: github.event.pull_request.merged == true
+  onboard:
+    name: Onboard (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    env:
+      # Build setup_quanianitis from the checkout — don't rely on a published
+      # release existing for every commit.
+      FORCE_SOURCE_BUILD: "1"
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.23'
 
-      - name: Install stow
-        run: brew install stow
+      # `install` looks for the repo at ~/dotfiles; when curled from the raw
+      # URL on `main` it would clone main again. For CI we want it to build
+      # THIS checkout, so pre-seed ~/dotfiles as a symlink to the workspace.
+      - name: Seed ~/dotfiles from checkout (so install builds this commit)
+        run: |
+          if [ ! -e "$HOME/dotfiles" ]; then
+            ln -s "$GITHUB_WORKSPACE" "$HOME/dotfiles"
+          fi
 
-      - name: Full install
+      # ---- Step 1: install curl (bare-machine simulation) --------------------
+      - name: Ensure curl is installed (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          if ! command -v curl >/dev/null; then
+            sudo apt-get update -y
+            sudo apt-get install -y --no-install-recommends curl ca-certificates
+          fi
+
+      - name: Ensure curl is installed (macOS)
+        if: matrix.os == 'macos-latest'
+        run: command -v curl >/dev/null || brew install curl
+
+      # ---- Step 2: copy-paste scripts/prereqs.sh from the README ------------
+      # Exactly the command from README's "Quick install — remote one-liner".
+      - name: Prereqs (Ubuntu, SKIP_BREW=1)
+        if: matrix.os == 'ubuntu-latest'
         env:
-          ENABLE_CICD: "true"
-          ACTIONS_WORKSPACE: ${{ github.workspace }}
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
-        run: |
-          zsh -c "$(curl -fsSL https://raw.githubusercontent.com/quanianitis/dotfiles/refs/heads/main/install)"
+          SKIP_BREW: "1"
+        run: curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/scripts/prereqs.sh | bash
 
-      - name: Post-Installation Verification
+      - name: Prereqs (macOS, full Homebrew)
+        if: matrix.os == 'macos-latest'
+        run: curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/scripts/prereqs.sh | bash
+
+      # ---- Step 3: copy-paste the install one-liner from the README ---------
+      - name: Install (Ubuntu, SKIP_BREW=1)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          SKIP_BREW: "1"
+        run: curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/install | bash
+
+      - name: Install (macOS, full)
+        if: matrix.os == 'macos-latest'
+        run: curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/install | bash
+
+      # ---- Step 4: verification (inlined; previously test/onboard-and-verify.sh)
+      - name: Verify symlinks point into ~/dotfiles
+        shell: bash
         run: |
-          trimmed_workspace=$(echo "${{ github.workspace }}" | sed 's/\/dotfiles\/dotfiles/\/dotfiles/')
-          cat $trimmed_workspace/.config/alacritty/* || true
-          cat $trimmed_workspace/.config/helix/* || true
-          cat $trimmed_workspace/.zshrc || true
-          ls $trimmed_workspace/.config || true
+          set -u
+          fail=0
+          pass() { printf '  PASS %s\n' "$*"; }
+          bad()  { printf '  FAIL %s\n' "$*"; fail=1; }
+          check_link() {
+            local link="$HOME/$1"
+            if [[ -L "$link" && -e "$link" ]]; then
+              local tgt; tgt="$(readlink "$link")"
+              case "$tgt" in
+                *dotfiles/*) pass "~/$1 -> $tgt" ;;
+                *)           bad  "~/$1 -> $tgt (not into dotfiles)" ;;
+              esac
+            else
+              bad "~/$1 is missing or a dangling symlink"
+            fi
+          }
+          for l in \
+            .zshrc .aliases .zsh_functions .fzf.zsh .zsh-vi-mode.zsh \
+            .gitconfig \
+            .config/helix/config.toml \
+            .config/ghostty/config \
+            .config/zellij/config.kdl \
+            .config/gh/config.yml \
+            .ssh/config \
+            .steampipe/config/config.spc
+          do
+            check_link "$l"
+          done
+          exit $fail
+
+      - name: Verify ~/.ssh is mode 0700
+        shell: bash
+        run: |
+          # GNU stat: -c %a ; BSD/macOS stat: -f %A
+          mode="$(stat -c '%a' "$HOME/.ssh" 2>/dev/null || stat -f '%A' "$HOME/.ssh")"
+          [[ "$mode" == "700" ]] || { echo "~/.ssh mode is $mode (want 700)"; exit 1; }
+          echo "~/.ssh is 0700"
+
+      - name: Verify Oh My Zsh + plugins
+        shell: bash
+        run: |
+          set -u
+          fail=0
+          [[ -d "$HOME/.oh-my-zsh" ]] || { echo "oh-my-zsh missing"; fail=1; }
+          for p in zsh-autosuggestions zsh-syntax-highlighting fzf-tab zsh-vi-mode; do
+            [[ -d "$HOME/.oh-my-zsh/custom/plugins/$p" ]] \
+              || { echo "plugin $p missing"; fail=1; }
+          done
+          exit $fail
+
+      - name: Verify zsh config parses and sources cleanly
+        shell: bash
+        run: |
+          set -e
+          zsh -n "$HOME/.zshrc"
+          zsh -ic 'echo __ZSH_OK__' | grep -q __ZSH_OK__
+          echo "zsh config OK"
