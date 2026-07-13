@@ -106,3 +106,4 @@ zvm_bindkey viins '\e\x7f' backward_delete_word
 zvm_bindkey viins '\e[1;3D' backward-word
 zvm_bindkey viins '\ef' forward-word
 zvm_bindkey viins '\\' self-insert
+

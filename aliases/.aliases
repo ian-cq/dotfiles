@@ -33,8 +33,6 @@ alias tx="zellij --layout ichan"
 alias diff="delta"
 alias :q="exit"
 alias tf="terraform"
-alias nv="nvim"
-alias vim="nvim"
 
 # Alicloud
 alias ali="aliyun"

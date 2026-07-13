@@ -1,4 +1,4 @@
-theme = "ayu_dark_partial"
+theme = "ayu_dark"
 
 [editor.soft-wrap]
 enable = true

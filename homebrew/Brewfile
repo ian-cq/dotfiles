@@ -1,127 +1,77 @@
-tap "anomalyco/tap"
-tap "buildpacks/tap"
-tap "cloudflare/cloudflare"
-tap "codefresh-io/cli"
-tap "hashicorp/tap"
-tap "homebrew/bundle"
+# Brewfile — lean core CLI toolchain for an SRE workstation.
+#
+# Scope: the tools actually used day-to-day — Terraform, Kubernetes, Ghostty,
+# Helix, GitUI — plus the shell/search/git plumbing they depend on. Everything
+# here is cross-platform (macOS + Linuxbrew). GUI apps live in Brewfile.casks
+# and are opt-in.
+#
+#   brew bundle --file=homebrew/Brewfile          # core (installed by setup)
+#   brew bundle --file=homebrew/Brewfile.casks    # optional GUI apps (macOS)
+
 tap "turbot/tap"
 
-brew "aliyun-cli"
-brew "anomalyco/tap/opencode"
-brew "ansible"
-brew "ansible-language-server"
-brew "argocd"
-brew "awscli"
-brew "bash-language-server"
-brew "boost-python3"
-brew "btop"
-brew "cilium-cli"
-brew "cmake"
-brew "conftest"
-brew "coreutils"
-brew "csvlens"
-brew "direnv"
-brew "docker-ls"
-brew "dust"
-brew "eza"            # exa is unmaintained; eza is the maintained fork
-brew "fd"
-brew "findutils"
-brew "fzf"
-brew "gh"
-brew "ghostscript"
+# --- Shell & core plumbing --------------------------------------------------
 brew "git"
-brew "git-delta"
-brew "git-lfs"
-brew "gitui"
-brew "glib"
-brew "gnupg"
-brew "gnutls"
-brew "go"
-brew "helix"
-brew "helm"
-brew "httpie"
-brew "jless"
-brew "jq"
-brew "kafka"
-brew "krew"
-brew "kube-ps1"
-brew "kubeconform"
-brew "kubectx"
-brew "kubent"
-brew "kustomize"
-brew "libgit2@1.7"
-brew "libpq", link: true
-brew "libtermkey"
-brew "minicom"
-brew "mkcert"
+brew "stow"            # symlink manager used by the installer
+brew "zsh"
+brew "coreutils"
+brew "findutils"
 brew "moreutils"
-brew "mprocs"
-brew "neovim"
-brew "nmap"
-brew "nvm"
-brew "openjdk"
-brew "openssh"
-brew "packer"
-brew "parallel"
-brew "pgcli"
+brew "direnv"
+brew "zoxide"          # `z` / cd replacement
+brew "gnupg"           # signed commits
 brew "pinentry"
-brew "pinentry-mac"
-brew "pv"
-brew "pyenv"
-brew "python@3.11"
-brew "qpdf"
-brew "rename"
-brew "rg"
-brew "rlwrap"
-brew "rust"
-brew "screen"
-brew "socat"
-brew "sqlmap"
-brew "ssh-copy-id"
-brew "starship"
-brew "steampipe"
-brew "stow"
-brew "taplo"
-brew "tcpflow"
-brew "tcpreplay"
-brew "tcptrace"
-brew "terraform-docs"
-brew "terraform-ls"
-brew "terraformer"
-brew "tfenv"
-brew "tldr"
-brew "tmux"
-brew "tree"
-brew "ucspi-tcp"
-brew "unbound"
-brew "vbindiff"
-brew "watch"
+brew "openssh"
 brew "wget"
-brew "xsv"
+brew "tree"
+brew "watch"
+brew "tldr"
+brew "gh"              # GitHub CLI (config is stowed)
+
+# --- Editors & TUIs ---------------------------------------------------------
+brew "helix"           # primary editor (hx)
+brew "neovim"          # secondary (vim/nv aliases, kickstart submodule)
+brew "gitui"           # git TUI
+brew "zellij"          # terminal multiplexer
+
+# --- Search / files / diff --------------------------------------------------
+brew "fzf"
+brew "fd"
+brew "ripgrep"         # `rg` (aliased over grep in .aliases)
+brew "bat"             # `cat` replacement (aliased)
+brew "eza"             # maintained `exa` fork
+brew "jq"
 brew "yq"
-brew "zellij"
-brew "zoxide"
+brew "git-delta"       # `delta` diff pager
+brew "dust"            # `du` replacement (aliased)
 
-brew "buildpacks/tap/pack"
-brew "cloudflare/cloudflare/cf-terraforming"
-brew "hashicorp/tap/terraform", link: false
-brew "turbot/tap/powerpipe"
+# --- Language servers (for Helix) -------------------------------------------
+brew "bash-language-server"
+brew "taplo"           # TOML LSP
+brew "terraform-ls"
 
-cask "1password"
-cask "1password-cli"
-cask "alacritty"
-cask "foxit-reader"
-cask "gcloud-cli"
-cask "ghostty"
-cask "google-chrome"
-cask "google-drive"
-cask "obsidian"
-cask "openlens"
-cask "orbstack"
-cask "rectangle"
-cask "spotify"
-cask "telegram"
-cask "twingate"
-cask "whatsapp"
-cask "zed"
-cask "font-fira-code-nerd-font"
+# --- Terraform --------------------------------------------------------------
+brew "tfenv"           # Terraform version manager (installs terraform binaries)
+brew "terraform-docs"
+
+# --- Kubernetes -------------------------------------------------------------
+brew "kubernetes-cli"  # kubectl
+brew "kubectx"         # kubectx + kubens
+brew "kustomize"
+brew "krew"            # kubectl plugin manager
+brew "helm"
+brew "kubeconform"     # manifest validation
+brew "kube-ps1"        # kube context in prompt
+brew "argocd"
+
+# --- Languages / runtimes ---------------------------------------------------
+brew "go"              # also builds the setup_quanianitis installer
+brew "python@3.11"
+brew "pyenv"           # lazy-loaded in .zshrc
+
+# --- Cloud / query ----------------------------------------------------------
+brew "awscli"
+brew "steampipe"       # SQL over cloud/k8s/terraform (configs are stowed)
+
+# --- System ----------------------------------------------------------------
+brew "btop"            # resource monitor
