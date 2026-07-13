@@ -6,37 +6,48 @@ Personal cross-platform (macOS / Linux) dotfiles. Symlinks are managed with **GN
 
 ---
 
-## Quick install — two steps
+## Quick install — remote one-liner
 
-Onboarding a fresh machine is split into two idempotent runs:
-
-```sh
-# 1. Fetch prerequisites: base packages + Homebrew (needs sudo on Linux)
-./scripts/prereqs.sh
-
-# 2. Download/build setup_quanianitis, create every symlink, install the Brewfile
-./install
-```
-
-Or pin a release:
+On a brand-new machine, bootstrap with two `curl | bash` calls (no clone
+needed — both scripts live in the repo and are fetched from `main`):
 
 ```sh
-./install --version v1.2.3
+# 1. Prerequisites: base packages + Homebrew (needs sudo on Linux)
+curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/scripts/prereqs.sh | bash
+
+# 2. Download the released setup_quanianitis binary, clone the repo, stow everything
+curl -fsSL https://raw.githubusercontent.com/ian-cq/dotfiles/main/install | bash
 ```
 
-**Run 1 — `scripts/prereqs.sh`** installs the minimal toolchain the installer
-needs and nothing more:
+`prereqs.sh` is ~25 lines and safe to eyeball before piping. `install` then
+resolves the [latest release](https://github.com/ian-cq/dotfiles/releases/latest),
+downloads the prebuilt `setup_quanianitis-<version>-<os>-<arch>.tar.gz` asset,
+falls back to `go build` if no asset matches, and runs the binary.
+
+Already cloned? Run the local copies instead:
+
+```sh
+./scripts/prereqs.sh          # run #1
+./install                     # run #2
+./install --version v0.6.2    # pin a specific release
+```
+
+**Run 1 — [`scripts/prereqs.sh`](scripts/prereqs.sh)** (~25 lines, copy-pasteable
+[raw](https://raw.githubusercontent.com/ian-cq/dotfiles/main/scripts/prereqs.sh))
+installs the minimal toolchain the installer needs and nothing more:
 
 - OS base packages via `apt-get`/`dnf`/`pacman` (with an `apt-get update` first,
   so it works on a bare image): `build-essential`, `git`, `curl`, `file`,
   `stow`, `zsh`.
-- Homebrew (if missing) and puts it on `PATH`.
+- Homebrew (if missing) and puts it on `PATH` for the current shell.
 
-**Run 2 — `install`** then:
+**Run 2 — [`install`](install)** ([raw](https://raw.githubusercontent.com/ian-cq/dotfiles/main/install))
+then:
 
 1. Resolves the latest release tag (or uses `--version`).
-2. Downloads the prebuilt `setup_quanianitis` binary — or, if no matching
-   release exists, builds it from source with `go`.
+2. Downloads the prebuilt `setup_quanianitis-<version>-<os>-<arch>.tar.gz`
+   release asset from GitHub — or, if no matching release exists (or
+   `FORCE_SOURCE_BUILD=1`), builds it from source with `go`.
 3. Clones the repo to `~/dotfiles` with submodules (skipped if it already exists).
 4. Installs the binary to the first writable Homebrew / `/usr/local` bin dir.
 5. Runs `setup_quanianitis` from `~/dotfiles`, which:
