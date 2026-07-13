@@ -144,6 +144,8 @@ dotfiles/
 ├── homebrew/
 │   ├── Brewfile              # Lean core CLI toolchain (installed by setup)
 │   └── Brewfile.casks        # Optional GUI apps (macOS) — opt-in
+├── library/                  # macOS ~/Library/* configs (stowed on darwin only)
+│   └── Rectangle/            # Rectangle window manager JSON config
 ├── ssh/config
 ├── steampipe/                # Steampipe connection configs
 └── zsh/                      # .zshrc, .p10k.zsh, .fzf.zsh, etc.

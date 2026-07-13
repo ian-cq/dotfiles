@@ -115,6 +115,13 @@ func main() {
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
 
+	// Rectangle (macOS window manager) — stow its JSON config into
+	// ~/Library/Application Support/Rectangle. Rectangle re-reads this file
+	// on Import (Settings → General → Import/Export) or on next launch.
+	if runtime.GOOS == "darwin" {
+		stowDir("dotfiles/library", "Library/Application Support/Rectangle", "Rectangle")
+	}
+
 	// ~/.ssh must be private or ssh refuses to use it.
 	if home, err := os.UserHomeDir(); err == nil {
 		_ = os.Chmod(filepath.Join(home, ".ssh"), 0o700)

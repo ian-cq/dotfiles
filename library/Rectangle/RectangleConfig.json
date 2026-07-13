@@ -1,0 +1,120 @@
+{
+  "bundleId": "com.knollsoft.Rectangle",
+  "defaults": {
+    "allowAnyShortcut": {
+      "type": "bool",
+      "value": true
+    },
+    "almostMaximize": {
+      "type": "dict",
+      "value": {}
+    },
+    "alternateDefaultShortcuts": {
+      "type": "bool",
+      "value": true
+    },
+    "bottomRight": {
+      "type": "dict",
+      "value": {
+        "keyCode": 37,
+        "modifierFlags": 786432
+      }
+    },
+    "center": {
+      "type": "dict",
+      "value": {}
+    },
+    "doubleClickTitleBar": {
+      "type": "int",
+      "value": 3
+    },
+    "footprintAnimationDurationMultiplier": {
+      "type": "float",
+      "value": 0.75
+    },
+    "gapSize": {
+      "type": "int",
+      "value": 2
+    },
+    "hideMenubarIcon": {
+      "type": "bool",
+      "value": true
+    },
+    "internalTilingNotified": {
+      "type": "bool",
+      "value": true
+    },
+    "landscapeSnapAreas": {
+      "type": "string",
+      "value": "[3,{\"action\":16},1,{\"action\":15},5,{\"action\":1},7,{\"action\":12},2,{\"action\":2},6,{\"action\":13},8,{\"action\":14},4,{\"action\":0}]"
+    },
+    "lastVersion": {
+      "type": "string",
+      "value": "99"
+    },
+    "launchOnLogin": {
+      "type": "bool",
+      "value": true
+    },
+    "reflowTodo": {
+      "type": "dict",
+      "value": {
+        "keyCode": 45,
+        "modifierFlags": 786432
+      }
+    },
+    "subsequentExecutionMode": {
+      "type": "int",
+      "value": 1
+    },
+    "todo": {
+      "type": "int",
+      "value": 2
+    },
+    "todoApplication": {
+      "type": "string",
+      "value": "com.knollsoft.Rectangle"
+    },
+    "todoMode": {
+      "type": "bool",
+      "value": true
+    },
+    "todoSidebarSide": {
+      "type": "int",
+      "value": 1
+    },
+    "todoSidebarWidth": {
+      "type": "int",
+      "value": 1200
+    },
+    "toggleTodo": {
+      "type": "dict",
+      "value": {
+        "keyCode": 11,
+        "modifierFlags": 786432
+      }
+    },
+    "topLeft": {
+      "type": "dict",
+      "value": {
+        "keyCode": 4,
+        "modifierFlags": 786432
+      }
+    },
+    "topRight": {
+      "type": "dict",
+      "value": {
+        "keyCode": 40,
+        "modifierFlags": 786432
+      }
+    },
+    "unsnapRestore": {
+      "type": "int",
+      "value": 2
+    },
+    "windowSnapping": {
+      "type": "int",
+      "value": 2
+    }
+  }
+}
