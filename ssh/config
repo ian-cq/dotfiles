@@ -28,15 +28,23 @@ Host *
   
   # Enable the compression of the data sent to the server
   Compression yes
+
+  SetEnv TERM=xterm-256color
   
   # Specifies the real user name to log in as. 
   # This can be useful if you have a different user name on different systems
   # User myusername
   AddKeysToAgent yes
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
-Host homelab
-    HostName homelab.quanianitis.com
+Host 103.209.157.247
+    HostName 103.209.157.247
     User fedora
     IdentityFile ~/Library/Keychains/quanianitis.pem
     AddKeysToAgent yes
 
+Host quanianitis.homelab
+    HostName 103.209.157.247
+    User fedora
+    IdentityFile ~/Library/Keychains/quanianitis.pem
+    AddKeysToAgent yes

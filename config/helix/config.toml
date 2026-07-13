@@ -1,4 +1,4 @@
-theme = "ayu_dark"
+theme = "base16_terminal"
 
 [editor.soft-wrap]
 enable = true
@@ -10,11 +10,11 @@ auto-save = true
 completion-trigger-len = 1
 bufferline = "multiple"
 completion-replace = true
-end-of-line-diagnostics = "hint"
+# end-of-line-diagnostics = "hint"
 
 [editor.inline-diagnostics]
 cursor-line = "error"
-other-lines = "error"
+# other-lines = "error"
 
 [editor.cursor-shape]
 insert = "bar"
