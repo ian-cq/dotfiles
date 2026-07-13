@@ -86,17 +86,11 @@ jobs:
         run: |
           for p in /opt/homebrew /usr/local; do
             if [[ -x "$p/bin/brew" ]]; then
-              echo "$p/bin" >> "$GITHUB_PATH"
+              echo "$p/bin"  >> "$GITHUB_PATH"
               echo "$p/sbin" >> "$GITHUB_PATH"
-              echo "brew prefix: $p"
               break
             fi
           done
-          echo "PATH now: $PATH"
-          echo "stow located at: $(command -v stow || echo NOT FOUND)"
-          # Belt-and-braces: if prereqs.sh's `have stow` check was fooled
-          # (e.g. stow lives somewhere not on the fresh-step PATH), ensure it.
-          command -v stow >/dev/null || brew install stow
 
       # ---- Step 3: copy-paste the install one-liner from the README ---------
       - name: Install (Ubuntu, SKIP_BREW=1)
