@@ -137,6 +137,7 @@ func main() {
 		// Appearance
 		slog.Info("Updating System Settings' Appearance")
 		writeMacDefaults("NSGlobalDomain", "KeyRepeat", "-int 2")
+		writeMacDefaults("NSGlobalDomain", "InitialKeyRepeat", "-int 15")
 		writeMacDefaults("NSGlobalDomain", "AppleShowScrollBars", "-string 'WhenScrolling'")
 
 		// Desktop & Dock
@@ -147,9 +148,14 @@ func main() {
 		writeMacDefaults("com.apple.dock", "magnification", "-bool true")
 		writeMacDefaults("com.apple.dock", "static-only", "-bool true")
 		writeMacDefaults("com.apple.dock", "autohide", "-bool true")
+		writeMacDefaults("com.apple.dock", "minimize-to-application", "-bool true")
+		// Mission Control
+		writeMacDefaults("com.apple.dock", "mru-spaces", "-bool false")
+		writeMacDefaults("com.apple.dock", "expose-group-apps", "-bool true")
 
 		// Trackpad, mouse, keyboard, Bluetooth accessories, and input
 		slog.Info("Updating System Settings' Trackpad")
+		writeMacDefaults("com.apple.AppleMultitouchTrackpad", "Clicking", "-bool true")
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", "-bool true")
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadTwoFingerDoubleTapGesture", "-bool true")
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadRightClick", "-bool true")

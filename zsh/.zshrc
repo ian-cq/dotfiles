@@ -120,3 +120,6 @@ zvm_bindkey viins '\e[1;3D' backward-word
 zvm_bindkey viins '\ef' forward-word
 zvm_bindkey viins '\\' self-insert
 
+# Flutter/FVM/Dart
+export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
+export NVM_DIR="$HOME/.nvm"

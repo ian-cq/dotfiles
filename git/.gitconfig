@@ -156,7 +156,7 @@
 
 [url "git@github.com:"]
 
-	insteadOf = "gh:"
+	insteadOf = https://github.com/
 	pushInsteadOf = "github:"
 	pushInsteadOf = "git://github.com/"
 
@@ -191,7 +191,7 @@
 	required = true
 [user]
 	signingkey = 03D21858C2832B22
-	name = Chan Quan Ian
+	name = Ian Chan
 	email = work@quanianitis.com
 [credential "https://github.com"]
 	helper =
@@ -210,3 +210,4 @@
 [push]
 	autoSetupRemote = true
 	default = current
+
