@@ -74,5 +74,14 @@ brew "pyenv"           # lazy-loaded in .zshrc
 brew "awscli"
 brew "steampipe"       # SQL over cloud/k8s/terraform (configs are stowed)
 
+# --- AI / dev tools --------------------------------------------------------
+brew "opencode"        # AI coding agent
+
+# --- Network debugging -----------------------------------------------------
+brew "telnet"
+brew "nmap"
+brew "mtr"             # traceroute + ping combined
+brew "tcpdump"
+
 # --- System ----------------------------------------------------------------
 brew "btop"            # resource monitor

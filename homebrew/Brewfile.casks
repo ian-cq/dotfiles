@@ -13,16 +13,18 @@ cask "font-fira-code-nerd-font"   # font used by Ghostty + Helix icons
 cask "1password"                  # secrets manager
 cask "1password-cli"              # `op` CLI
 cask "orbstack"                   # lightweight Docker / Kubernetes runtime
+cask "chatgpt"                    # ChatGPT desktop app
+cask "gcloud-cli"                 # Google Cloud SDK
+cask "google-chrome"
+cask "rectangle"                  # window management
+cask "obsidian"
+cask "whatsapp"
+cask "google-drive"
 
 # --- Opt-in personal apps (uncomment as needed) -----------------------------
-# cask "google-chrome"
-# cask "rectangle"                # window management
-# cask "obsidian"
 # cask "zed"
 # cask "openlens"                 # Kubernetes GUI
 # cask "spotify"
 # cask "telegram"
-# cask "whatsapp"
 # cask "twingate"                 # zero-trust VPN client
-# cask "google-drive"
 # cask "foxit-reader"
