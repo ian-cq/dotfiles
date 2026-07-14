@@ -194,11 +194,11 @@
 	name = Ian Chan
 	email = work@quanianitis.com
 [credential "https://github.com"]
-	helper =
-	helper = !gh auth git-credential
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper =
-	helper = !gh auth git-credential
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
 
 [delta]
 	navigate = true    # use n and N to move between diff sections
