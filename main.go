@@ -179,6 +179,12 @@ func main() {
 		writeMacDefaults("com.apple.driver.AppleBluetoothMultitouch.trackpad", "TrackpadHorizScroll", "-bool true")
 		writeMacDefaults("NSGlobalDomain", "com.apple.trackpad.enableSecondaryClick", "-bool true")
 
+		// Keyboard: Use F1, F2, etc. as standard function keys
+		writeMacDefaults("NSGlobalDomain", "com.apple.keyboard.fnState", "-bool true")
+
+		// Display: More Space resolution
+		writeMacDefaults("com.apple.windowserver", "DisplayResolutionEnabled", "-bool true")
+
 		// Scrolling
 		writeMacDefaults("-g", "com.apple.swipescrolldirection", "-bool false")
 	} else if runtime.GOOS == "linux" {
