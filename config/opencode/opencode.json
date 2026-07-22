@@ -1,0 +1,59 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@ex-machina/opencode-anthropic-auth@1.8.1"],
+  "mcp": {
+    "aws-billing-prod": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "/usr/bin/env",
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=prod",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "aws-billing-devtools": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "/usr/bin/env",
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=devtools",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "grafana": {
+      "type": "local",
+      "enabled": true,
+      "command": ["/opt/homebrew/bin/uvx", "mcp-grafana"],
+      "environment": {
+        "GRAFANA_URL": "https://grafana.feedme.farm",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:grafana_service_account_token}"
+      }
+    }
+  },
+  "permission": {
+    "bash": {
+      "kubectl --context twingate-prod-eks-api-server *": "deny",
+      "kubectl --context twingate-data-production-eks-api-server *": "deny",
+      "helm --kube-context twingate-prod-eks-api-server *": "deny",
+      "helm --kube-context twingate-data-production-eks-api-server *": "deny",
+      "*": "ask"
+    },
+    "external_directory": {
+      "*": "allow"
+    },
+    "edit": {
+      "/Users/ianqchan/Documents/feedme-infrastructure/sre-docs/quanian/*": "allow",
+      "/Users/ianqchan/Documents/feedme-scripts/sre-scripts/quanian/*": "allow"
+    }
+  }
+}
