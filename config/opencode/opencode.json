@@ -1,0 +1,99 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@ex-machina/opencode-anthropic-auth@1.8.1"],
+  "mcp": {
+    "aws-billing-prod": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "/usr/bin/env",
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=prod",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "aws-billing-devtools": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "/usr/bin/env",
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=devtools",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "grafana": {
+      "type": "local",
+      "enabled": true,
+      "command": ["/opt/homebrew/bin/uvx", "mcp-grafana"],
+      "environment": {
+        "GRAFANA_URL": "https://grafana.feedme.farm",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_MCP_SERVICE_ACCOUNT_TOKEN}"
+      }
+    },
+    "argocd-mcp": {
+      "type": "local",
+      "enabled": true,
+      "command": ["npx", "argocd-mcp@latest", "stdio"],
+      "environment": {
+        "ARGOCD_BASE_URL": "https://{env:ARGOCD_SERVER}",
+        "ARGOCD_API_TOKEN": "{env:ARGOCD_AUTH_TOKEN}"
+      }
+    },
+    "n8nMcp": {
+      "type": "remote",
+      "url": "https://automation.feedme.farm/mcp-server/http",
+      "headers": {
+        "Authorization": "Bearer {env:N8N_MCP_TOKEN}"
+      },
+      "enabled": true
+    }
+  },
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "git *": "allow",
+      "gh *": "allow",
+      "ls *": "allow",
+      "cat *": "allow",
+      "cd *": "allow",
+      "pwd": "allow",
+      "echo *": "allow",
+      "grep *": "allow",
+      "rg *": "allow",
+      "find *": "allow",
+      "head *": "allow",
+      "tail *": "allow",
+      "wc *": "allow",
+      "which *": "allow",
+      "mkdir *": "allow",
+      "cp *": "allow",
+      "mv *": "allow",
+      "touch *": "allow",
+      "diff *": "allow",
+      "sort *": "allow",
+      "uniq *": "allow",
+      "env": "allow",
+      "date": "allow",
+      "sed *": "allow",
+      "awk *": "allow",
+      "jq *": "allow",
+      "rtk *": "allow",
+    },
+    "external_directory": {
+      "*": "allow"
+    },
+    "edit": {
+      "/Users/ianqchan/Documents/feedme-infrastructure/sre-docs/quanian/*": "allow",
+      "/Users/ianqchan/Documents/feedme-scripts/sre-scripts/quanian/*": "allow"
+    }
+  }
+}

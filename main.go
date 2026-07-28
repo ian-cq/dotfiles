@@ -107,6 +107,7 @@ func main() {
 	stowDir("dotfiles/config", ".config/gh", "gh")
 	stowDir("dotfiles/config", ".config/zellij", "zellij")
 	stowDir("dotfiles/config", ".config/nvim", "nvim")
+	stowDir("dotfiles/config", ".config/opencode", "opencode")
 	stowDir("dotfiles", ".steampipe/config", "steampipe")
 	stowDir("dotfiles", ".ssh", "ssh")
 	// gnupg: only the *public* config files (gpg-agent.conf) are stowed.

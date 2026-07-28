@@ -25,7 +25,14 @@ alias dc="z ~/Documents"
 # Modern CLI replacements
 # ---------------------------------------------------------------------------
 alias lsa="ls -la"
-alias cat="bat --theme base16"
+cat() {
+  local md=() rest=()
+  for f in "$@"; do
+    if [[ "$f" == *.md ]]; then md+=("$f"); else rest+=("$f"); fi
+  done
+  (( ${#md[@]} ))   && glow -p -w 0 "${md[@]}"
+  (( ${#rest[@]} )) && bat --theme base16 "${rest[@]}"
+}
 alias du="dust"
 alias tx="zellij --layout ichan"
 alias diff="delta"

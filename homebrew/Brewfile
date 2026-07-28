@@ -34,6 +34,10 @@ brew "helix"           # primary editor (hx)
 brew "neovim"          # secondary (vim/nv aliases, kickstart submodule)
 brew "gitui"           # git TUI
 brew "zellij"          # terminal multiplexer
+brew "csvlens"
+brew "glow"
+brew "jq-lsp"
+brew "vscode-langservers-extracted"
 
 # --- Search / files / diff --------------------------------------------------
 brew "fzf"
@@ -76,6 +80,7 @@ brew "steampipe"       # SQL over cloud/k8s/terraform (configs are stowed)
 
 # --- AI / dev tools --------------------------------------------------------
 brew "opencode"        # AI coding agent
+brew "rtk"
 
 # --- Network debugging -----------------------------------------------------
 brew "telnet"
