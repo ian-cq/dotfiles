@@ -6,6 +6,7 @@
 # ---------------------------------------------------------------------------
 typeset -U path PATH                                  # de-duplicate entries
 path=(
+  $HOME/.local/bin                                    # user scripts
   /opt/homebrew/bin                                   # Homebrew (Apple Silicon)
   /opt/homebrew/sbin
   /home/linuxbrew/.linuxbrew/bin                      # Homebrew (Linux)
@@ -123,3 +124,15 @@ zvm_bindkey viins '\\' self-insert
 # Flutter/FVM/Dart
 export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
+export PATH="/Users/ianqchan/.agents/skills/twingate-cli/.venv/bin:$PATH"
+export PATH="/opt/homebrew/opt/mysql-client@8.4/bin:$PATH"
+
+# ---------------------------------------------------------------------------
+# Keep the zcompdump mtime newer than plugin completion caches.
+# OMZ plugins (argocd, docker, gh, helm, kubectl) refresh their completion
+# files asynchronously on every startup; without this, compinit sees newer
+# fpath files on the next launch and rebuilds the full dump (~350ms + 1000
+# compdef calls). Touching the dump after everything is loaded breaks that
+# loop so subsequent startups skip the rebuild.
+# ---------------------------------------------------------------------------
+{ command touch -- "${ZSH_COMPDUMP:-$HOME/.zcompdump-${HOST/.*/}-${ZSH_VERSION}}" 2>/dev/null } &|
