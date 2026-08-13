@@ -54,10 +54,10 @@ g.a = "code_action"  # Maps `ga` to show possible code actions
 # Muscle memory
 "{" = ["goto_prev_paragraph"]
 "}" = ["goto_next_paragraph"]
-"A-{" = ["move_parent_node_start"]
-"A-}" = ["move_parent_node_end"]
-"A-left" = ["select_prev_sibling"]
-"A-right" = ["select_next_sibling"]
+"A-{" = ["select_prev_sibling"]
+"A-}" = ["select_next_sibling"]
+# "A-left" = ["select_prev_sibling"]
+# "A-right" = ["select_next_sibling"]
 0 = "goto_line_start"
 "$" = "goto_line_end"
 "^" = "goto_first_nonwhitespace"

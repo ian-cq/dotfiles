@@ -41,11 +41,13 @@ alias tf="terraform"
 
 # Alicloud
 alias ali="aliyun"
+alias opencode='opencode --auto'
 
 # Kubernetes
 alias kctx="kubectx"
 alias kns="kubens"
-alias kubeoff="kubectx -u"
+# kubeoff is provided by the kube-ps1 plugin (toggles the prompt indicator).
+# For "unset current kubectx", use `kubectx -u` directly.
 
 # yazi: change cwd on exit
 y() {

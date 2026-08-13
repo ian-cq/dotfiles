@@ -11,7 +11,7 @@ window-save-state = never
 confirm-close-surface = false
 macos-option-as-alt = true
 
-keybind = global:cmd+s=toggle_quick_terminal
+keybind = global:ctrl+`=toggle_quick_terminal
 keybind = alt+m=write_scrollback_file:paste
 
 keybind = alt+left=esc:b
