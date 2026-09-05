@@ -2,6 +2,7 @@ background-opacity = 0.95
 
 background-blur-radius = true
 font-family = FiraCode Nerd Font
+font-size = 10
 copy-on-select = clipboard
 theme = "0x96f"
 mouse-scroll-multiplier = 2
