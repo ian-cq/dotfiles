@@ -1,0 +1,21 @@
+{
+  "agent": "survey",
+  "permissions": {
+    "defaultMode": "default",
+    "deny": ["Edit", "Write", "NotebookEdit"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 /Users/ianqchan/.claude/profiles/guard.py survey",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

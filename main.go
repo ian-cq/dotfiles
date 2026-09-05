@@ -120,6 +120,7 @@ func main() {
 	stowDir("dotfiles", "", "homebrew")
 	stowDir("dotfiles", "", "aliases")
 	stowDir("dotfiles", "", "git")
+	stowDir("dotfiles", "", "claude")
 
 	// Rectangle (macOS window manager) — stow its JSON config into
 	// ~/Library/Application Support/Rectangle. Rectangle re-reads this file

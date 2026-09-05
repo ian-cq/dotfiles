@@ -1,0 +1,55 @@
+{
+  "mcpServers": {
+    "aws-billing-prod": {
+      "type": "stdio",
+      "command": "/usr/bin/env",
+      "args": [
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=prod",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "aws-billing-devtools": {
+      "type": "stdio",
+      "command": "/usr/bin/env",
+      "args": [
+        "HOME=/Users/ianqchan",
+        "AWS_PROFILE=devtools",
+        "AWS_REGION=ap-southeast-1",
+        "FASTMCP_LOG_LEVEL=ERROR",
+        "MCP_TRANSPORT=stdio",
+        "/opt/homebrew/bin/uvx",
+        "awslabs.billing-cost-management-mcp-server@latest"
+      ]
+    },
+    "grafana": {
+      "type": "stdio",
+      "command": "/opt/homebrew/bin/uvx",
+      "args": ["mcp-grafana"],
+      "env": {
+        "GRAFANA_URL": "https://grafana.feedme.farm",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${GRAFANA_MCP_SERVICE_ACCOUNT_TOKEN}"
+      }
+    },
+    "argocd-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["argocd-mcp@latest", "stdio"],
+      "env": {
+        "ARGOCD_BASE_URL": "https://${ARGOCD_SERVER}",
+        "ARGOCD_API_TOKEN": "${ARGOCD_AUTH_TOKEN}"
+      }
+    },
+    "n8nMcp": {
+      "type": "http",
+      "url": "https://automation.feedme.farm/mcp-server/http",
+      "headers": {
+        "Authorization": "Bearer ${N8N_MCP_TOKEN}"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "agent": "communications",
+  "permissions": {
+    "defaultMode": "default",
+    "deny": ["Bash", "Edit", "Write", "NotebookEdit"]
+  }
+}
