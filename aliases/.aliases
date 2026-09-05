@@ -41,12 +41,12 @@ alias tf="terraform"
 
 # Alicloud
 alias ali="aliyun"
-alias opencode='opencode --auto'
+# alias opencode='opencode --auto'
 
-# Claude Code profiles (ported from opencode primary agents)
-alias survey='claude --settings ~/.claude/profiles/survey.json'
-alias autonomous='claude --settings ~/.claude/profiles/autonomous.json'
-alias comms='claude --settings ~/.claude/profiles/communications.json'
+# Claude Code agents (ported from opencode primary agents)
+alias survey='claude --agent survey --disallowed-tools Edit Write NotebookEdit'
+alias autonomous='claude --agent autonomous --permission-mode acceptEdits'
+alias comms='claude --agent communications --disallowed-tools Bash Edit Write NotebookEdit'
 
 # Kubernetes
 alias kctx="kubectx"

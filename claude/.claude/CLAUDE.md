@@ -90,9 +90,10 @@ credentials into a second Secrets Manager key.
   values in the MCP `command` through `/usr/bin/env` instead of relying on the
   settings `env` field. Use an absolute `uvx` path so the launch is independent
   of the child process `PATH`.
-- MCP servers are defined in `~/.claude/mcp.json` (tracked in dotfiles). Claude
-  Code itself reads user-scope MCP config from `~/.claude.json`, so after editing
-  `mcp.json` run `~/.claude/sync-mcp.sh` to apply it, then restart Claude Code.
+- MCP servers are defined in `~/.claude/skills/feedme-mcp/.mcp.json`, a
+  skills-directory plugin that Claude Code auto-loads. Edit that file and restart
+  Claude Code; there is no install or sync step. Verify with
+  `claude plugin details feedme-mcp@skills-dir`.
 
 ### direnv is the source of truth for MCP env vars
 
@@ -100,15 +101,15 @@ credentials into a second Secrets Manager key.
   `~/Documents/.envrc` (auto-loaded when the shell `cd`s
   into `~/Documents` or any repo below it). Claude Code is normally launched from
   a directory below it, so any variable exported there is available to `${VAR}`
-  placeholders in `~/.claude/mcp.json`.
+  placeholders in `.mcp.json`.
 - When adding a new local MCP server that needs a token/URL, **first check
   `~/Documents/.envrc`** for existing variables and reuse
   their exact names — do not invent new env var names. Current variables in
   that file include `ARGOCD_SERVER`, `ARGOCD_AUTH_TOKEN`, `N8N_MCP_TOKEN`,
   `GRAFANA_MCP_SERVICE_ACCOUNT_TOKEN`.
-- Do NOT hardcode tokens or URLs in `~/.claude/mcp.json`. Always reference them
-  via `${VAR}` and, if a needed variable is missing, add the `export` to the
-  `.envrc` (never inline the secret in `mcp.json` or in `CLAUDE.md`).
+- Do NOT hardcode tokens or URLs in `.mcp.json`. Always reference them via
+  `${VAR}` and, if a needed variable is missing, add the `export` to the `.envrc`
+  (never inline the secret in `.mcp.json` or in `CLAUDE.md`).
 - If `direnv status` shows `No .envrc or .env loaded` even though an `.envrc`
   exists in the workspace, it usually needs `direnv allow` once. After that,
   restart Claude Code from the workspace directory so the child MCP processes
@@ -199,6 +200,24 @@ rtk pip list            rtk pnpm install        rtk npm run <script>
 
 - Do not add comments to generated code. Write self-explanatory code; only include comments when the user explicitly requests them.
 - Keep git commit messages and PR descriptions succinct and bullet-pointed. Avoid elaborate prose, verbose explanations, or long narrative paragraphs.
+- Commit messages follow conventional commits: `<type>(<scope>): <imperative summary>`.
+  Types: feat, fix, refactor, perf, docs, test, chore, build, ci, style, revert.
+  Imperative mood ("add", not "added"/"adds"). Subject ≤50 chars where possible,
+  hard cap 72, no trailing period. Add a body only for a non-obvious why, a
+  breaking change, a migration note, or a linked issue — always for breaking
+  changes, security fixes, data migrations and reverts. Wrap the body at 72,
+  bullet with `-`, reference issues at the end (`Closes #42`). Never write "this
+  commit does X", "I"/"we"/"now", or "as requested by" (use a `Co-authored-by`
+  trailer), and do not restate a filename the scope already names.
+- Code review comments are one line per finding: `<file>:L<line>: <problem>. <fix>.`
+  Prefix with severity when it varies: 🔴 bug (broken, will cause an incident),
+  🟡 risk (works but fragile), 🔵 nit (style/naming, ignorable), ❓ q (a real
+  question, not a suggestion). Keep exact line numbers, exact symbol names in
+  backticks, and a concrete fix rather than "consider refactoring". Drop "I
+  noticed that", "it seems like", "you might want to consider", per-comment
+  praise, and restatements of what the line does. If unsure use `q:` rather than
+  hedging. Write full prose instead for security findings, architectural
+  disagreements, and anyone being onboarded.
 - PR descriptions must follow this structure (omit sections that are not applicable, but keep the headings in this order):
 
   ```

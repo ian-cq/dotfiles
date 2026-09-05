@@ -35,7 +35,7 @@
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${GRAFANA_MCP_SERVICE_ACCOUNT_TOKEN}"
       }
     },
-    "argocd-mcp": {
+    "argocd": {
       "type": "stdio",
       "command": "npx",
       "args": ["argocd-mcp@latest", "stdio"],
@@ -44,7 +44,7 @@
         "ARGOCD_API_TOKEN": "${ARGOCD_AUTH_TOKEN}"
       }
     },
-    "n8nMcp": {
+    "n8n": {
       "type": "http",
       "url": "https://automation.feedme.farm/mcp-server/http",
       "headers": {

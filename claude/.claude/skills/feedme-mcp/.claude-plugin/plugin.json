@@ -1,0 +1,5 @@
+{
+  "name": "feedme-mcp",
+  "description": "FeedMe SRE MCP servers: AWS billing (prod/devtools), Grafana, ArgoCD, n8n.",
+  "version": "1.0.0"
+}
