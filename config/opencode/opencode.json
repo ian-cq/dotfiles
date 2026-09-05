@@ -1,6 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["@ex-machina/opencode-anthropic-auth@1.8.1"],
+  "plugin": [
+    "@ex-machina/opencode-anthropic-auth@1.8.1",
+    "caveman-opencode-plugin",
+    "opencode-scheduler"
+  ],
   "mcp": {
     "aws-billing-prod": {
       "type": "local",
@@ -33,7 +37,10 @@
     "grafana": {
       "type": "local",
       "enabled": true,
-      "command": ["/opt/homebrew/bin/uvx", "mcp-grafana"],
+      "command": [
+        "/opt/homebrew/bin/uvx",
+        "mcp-grafana"
+      ],
       "environment": {
         "GRAFANA_URL": "https://grafana.feedme.farm",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_MCP_SERVICE_ACCOUNT_TOKEN}"
@@ -42,7 +49,11 @@
     "argocd-mcp": {
       "type": "local",
       "enabled": true,
-      "command": ["npx", "argocd-mcp@latest", "stdio"],
+      "command": [
+        "npx",
+        "argocd-mcp@latest",
+        "stdio"
+      ],
       "environment": {
         "ARGOCD_BASE_URL": "https://{env:ARGOCD_SERVER}",
         "ARGOCD_API_TOKEN": "{env:ARGOCD_AUTH_TOKEN}"
@@ -86,7 +97,7 @@
       "sed *": "allow",
       "awk *": "allow",
       "jq *": "allow",
-      "rtk *": "allow",
+      "rtk *": "allow"
     },
     "external_directory": {
       "*": "allow"
@@ -94,6 +105,8 @@
     "edit": {
       "/Users/ianqchan/Documents/feedme-infrastructure/sre-docs/quanian/*": "allow",
       "/Users/ianqchan/Documents/feedme-scripts/sre-scripts/quanian/*": "allow"
-    }
-  }
+    },
+    "skill": {}
+  },
+  "instructions": []
 }

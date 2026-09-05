@@ -57,8 +57,8 @@ plugins=(
 # History
 # ---------------------------------------------------------------------------
 HISTFILE=~/.zsh_history
-HISTSIZE=5000
-SAVEHIST=$HISTSIZE
+HISTSIZE=1000000
+SAVEHIST=1000000
 HISTDUP=erase
 setopt appendhistory hist_ignore_all_dups hist_save_no_dups \
        hist_ignore_dups hist_find_no_dups sharehistory
@@ -126,6 +126,10 @@ export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 export PATH="/Users/ianqchan/.agents/skills/twingate-cli/.venv/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql-client@8.4/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+KUBE_PS1_SYMBOL_ENABLE=false
+PROMPT='$(kube_ps1)'$PROMPT
 
 # ---------------------------------------------------------------------------
 # Keep the zcompdump mtime newer than plugin completion caches.
