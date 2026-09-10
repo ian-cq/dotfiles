@@ -13,6 +13,17 @@
 - Put all handwritten notes, plans, and personal scribbles created by agents under
   `~/Documents/feedme-infrastructure/sre-docs/quanian/`.
 
+## Machine Environment
+
+- This machine is Apple Silicon (arm64, Apple M5 Pro). Docker defaults to
+  pulling/building images matching the host architecture. Upstream or internal
+  images (e.g. GCP Artifact Registry, private registries) are frequently
+  amd64-only single-arch manifests and fail with "no matching manifest for
+  linux/arm64/v8" if pulled without an explicit platform. Always pass
+  `--platform linux/amd64` on `docker pull`/`build`/`run` when the image is
+  known or suspected amd64-only, or when it's destined for x86_64
+  infrastructure (e.g. AWS EKS nodes).
+
 ## SRE Workspace Repository Discovery
 
 - `~/Documents/feedme-infrastructure` is the SRE workspace. When operating from
